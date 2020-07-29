@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class _283_MoveZeroes {
 	public static void main(String[] args) {
-		Solution4 solution = new Solution4();
+		_283Solution4 solution = new _283Solution4();
 		int[] nums = {1, 2, 0, 4, 0, 5, 6};
 		solution.moveZeroes(nums);
 		for (int i = 0; i < nums.length; ++i) {
@@ -25,7 +25,7 @@ public class _283_MoveZeroes {
 /**
  * 暴力求解
  */
-class Solution1 {
+class _283Solution1 {
 	public void moveZeroes(int[] nums) {
 		// 开辟一个新数组，存储非零元素
 		ArrayList<Integer> noZero = new ArrayList<Integer>();
@@ -55,7 +55,7 @@ class Solution1 {
  *  遍历完数组后，k 处即为 0 开始放置的地方
  * 
  */
-class Solution2 {
+class _283Solution2 {
 	public void moveZeroes(int[] nums) {
 		int k = 0; // [0, k) 区间内是非零元素
 		for (int i = 0; i < nums.length; ++i) {
@@ -77,7 +77,7 @@ class Solution2 {
  * 具体思路：
  * 遍历数组， [0, k) 部分放非零元素，后面 [k, num.length) 部分中将第一个非零元素与 nums[k] 进行交换，nums[k] 之后一直是 0
  */ 
-class Solution3 {
+class _283Solution3 {
     public void moveZeroes(int[] nums) {
     	// 1, 2, 0, 4, 0, 5, 6
     	int k = 0;
@@ -99,7 +99,7 @@ class Solution3 {
  *  （2）将两个数交换过程的三步缩减为两步（仅针对此题而言）
  *  	因为此思路中可以保证 nums[k] 始终为 0 ，所以将 nums[k] 与 nums[i] 进行交换时，将 nums[k] 赋值为 nums[i] 后可以直接将 nums[i] 赋值为 0，不需要中间变量 tmp
  */
-class Solution4 {
+class _283Solution4 {
 	 public void moveZeroes(int[] nums) {
     	// 1, 2, 0, 4, 0, 5, 6
     	int k = 0;
