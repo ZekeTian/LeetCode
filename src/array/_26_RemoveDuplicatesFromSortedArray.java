@@ -10,7 +10,7 @@ package array;
 public class _26_RemoveDuplicatesFromSortedArray {
 	
 	public static void main(String[] args) {
-		_26Solution2 solution = new _26Solution2();
+		_26Solution solution = new _26Solution();
 		int[] nums = {1,1,2,2}; // {1, 1, 2, 2, 3}; // {0,0,1,1,1,2,2,3,3,4}; 
 		int len = solution.removeDuplicates(nums);
 		
@@ -21,41 +21,7 @@ public class _26_RemoveDuplicatesFromSortedArray {
 	
 }
 
-
-/**
- * 本题要求对数组去重，本质实际上也就是在数组中删除元素，从而解题思路可以借鉴 26 号问题。不过需要注意是，每次删除的元素可能不一样。
- *
- */
-class _26Solution1 {
-    public int removeDuplicates(int[] nums) {
-    	if (null == nums || 0 == nums.length) {
-    		return 0;
-    	}
-    	
-        int deleteVal = nums[0]; // 待删除元素
-        int k = 1; // [0, k) 内为不重复的元素，如果数组有重复的元素，则 k 指向第一个出现的重复元素。
-    	
-        // 1,1,2,2,3
-        // i = 1, k = 1, del = 1, num = [1, 1, 2, 2, 3]
-        // i = 2, k = 1, del = 1, num = [1, 2, 2, 2, 3]
-        // i = 3, k = 2, del = 2, num = [1, 2, 2, 2, 3]
-        // i = 4, k = 2, del = 2, num = [1, 2, 3, 2, 3]
-        
-        for (int i = 1; i < nums.length; ++i) {
-        	if (nums[i] != deleteVal) { // nums[i] 与 deleteVal  不等，则说明 nums[i] 是一个新的值，与前面 [0, k) 部分的元素不重复
-        		nums[k] = nums[i]; // 如果数组中有重复的值，则 k 指向第一个重复的值，将新值 nums[i] 放在 nums[k] 处
-        		 // 因为 nums 是有序的，相同的重复元素在原数组中是一起出现的。
-        		// 因此当出现新值 nums[i] 时，则说明数组中 nums[i] 的后面不可能再出现 deleteVal，但是可能会重复出现 nums[i]，因此 deleteVal 应该标记为 nums[i]
-        		deleteVal = nums[i];
-        		++k;
-        	}
-        }
-    	
-    	return k;
-    }
-}
-
-class _26Solution2 {
+class _26Solution {
 	public int removeDuplicates(int[] nums) {
 		if (null == nums || 0 == nums.length) {
 			return 0;
