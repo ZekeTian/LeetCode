@@ -1,4 +1,4 @@
-package array;
+package list;
 
 /**
  * https://leetcode.com/problems/remove-linked-list-elements/
