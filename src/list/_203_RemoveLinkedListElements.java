@@ -16,14 +16,13 @@ public class _203_RemoveLinkedListElements {
         ListNode node2 = new ListNode(6, node3);
         ListNode node1 = new ListNode(1, node2);
         //  ListNode node1 = new ListNode(1, null);
-        ListNode head = new ListNode(1, node1);
+        int[] nums = {6, 5, 4, 3, 6, 1};
+        ListNode head = ListUtil.createList(nums);
 
-        head = new _203Solution2().removeElements(head, 6);
-
-        for (ListNode cur = head; cur != null; cur = cur.next) {
-            System.out.println(cur.val);
-        }
-
+        ListUtil.print(head);
+//        head = new _203Solution2().removeElements(head, 6);
+        head = new _203Solution3().removeElements(head, 6);
+        ListUtil.print(head);
     }
 }
 
@@ -85,3 +84,28 @@ class _203Solution2 {
     }
 }
 
+/**
+ * 解法一，添加虚拟头节点，然后使用循环遍历的方式删除指定值的元素
+ *
+ */
+class _203Solution3 {
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+        ListNode pre = dummyHead;
+        ListNode cur = head;
+        
+        while (null != cur) {
+            if (val == cur.val) {
+                pre.next = cur.next;
+                cur.next = null;
+                cur = pre.next;
+            } else {
+                pre = cur;
+                cur = cur.next;
+            }
+        }
+        
+        return dummyHead.next;
+    }
+}
