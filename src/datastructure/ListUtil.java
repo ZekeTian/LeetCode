@@ -1,4 +1,4 @@
-package list;
+package datastructure;
 
 /**
  * 链表的工具类，用于创建链表、打印链表

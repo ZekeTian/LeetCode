@@ -1,5 +1,8 @@
 package list;
 
+import datastructure.ListNode;
+import datastructure.ListUtil;
+
 /**
  * https://leetcode.com/problems/remove-nth-node-from-end-of-list/
  * 
