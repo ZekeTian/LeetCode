@@ -19,7 +19,7 @@ import java.util.Stack;
  *  Input: s = "(]"
  *  Output: false
  */
-public class _20ValidParentheses {
+public class _20_ValidParentheses {
     
     public static void main(String[] args) {
         String s = "(]";

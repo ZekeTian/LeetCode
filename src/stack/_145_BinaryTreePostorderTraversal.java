@@ -16,7 +16,7 @@ import datastructure.TreeNode;
  *  （2）-100 <= Node.val <= 100
  *
  */
-public class _145BinaryTreePostorderTraversal {
+public class _145_BinaryTreePostorderTraversal {
 
     public static void main(String[] args) {
         //        TreeNode root = new TreeNode(1);
