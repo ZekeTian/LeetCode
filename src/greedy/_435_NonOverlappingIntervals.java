@@ -22,17 +22,17 @@ public class _435_NonOverlappingIntervals {
 
     public static void main(String[] args) {
         // test case 1, output: 1
-        //        int[][] intervals = { { 1, 2 }, { 2, 3 }, { 3, 4 }, { 1, 3 } };
+        int[][] intervals = { { 1, 2 }, { 2, 3 }, { 3, 4 }, { 1, 3 } };
 
         // test case 2, output: 2
         //        int[][] intervals = { { 1, 2 }, { 1, 2 }, { 1, 2 } };
 
         // test case 3, output: 0 
-        int[][] intervals = { { 1, 2 }, { 2, 3 } };
+        //        int[][] intervals = { { 1, 2 }, { 2, 3 } };
 
         //        _435Solution1 solution = new _435Solution1();
-
-        _435Solution2 solution = new _435Solution2();
+        //        _435Solution2 solution = new _435Solution2();
+        _435Solution3 solution = new _435Solution3();
 
         System.out.println(solution.eraseOverlapIntervals(intervals));
     }
@@ -155,5 +155,53 @@ class _435Solution2 {
         }
 
         return intervals.length - max;
+    }
+}
+
+/**
+ * 解法三：贪心算法
+ *
+ */
+class _435Solution3 {
+
+    private class Pair {
+        int start;
+        int end;
+
+        Pair(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        List<Pair> sortedIntervals = new ArrayList<Pair>(intervals.length);
+
+        for (int i = 0; i < intervals.length; ++i) {
+            sortedIntervals.add(new Pair(intervals[i][0], intervals[i][1]));
+        }
+
+        Collections.sort(sortedIntervals, new Comparator<Pair>() {
+            @Override
+            public int compare(Pair o1, Pair o2) {
+
+                if (o1.end != o2.end) {
+                    return o1.end - o2.end;
+                }
+
+                return o1.start - o2.start;
+            }
+        });
+
+        int pre = 0;
+        int putedCount = 1; // 可以放入的区间的个数。因为第一个区间可以放入，所以默认是 1
+        for (int cur = 1; cur < sortedIntervals.size(); ++cur) {
+            if (sortedIntervals.get(cur).start >= sortedIntervals.get(pre).end) {
+                ++putedCount;
+                pre = cur;
+            }
+        }
+
+        return intervals.length - putedCount;
     }
 }
