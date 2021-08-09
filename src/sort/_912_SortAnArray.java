@@ -17,7 +17,8 @@ public class _912_SortAnArray {
         int[] nums = { 5, 2, 3, 1 };
 
         //        _912Solution1 solution = new _912Solution1();
-        _912Solution2 solution = new _912Solution2();
+        //        _912Solution2 solution = new _912Solution2();
+        _912Solution6 solution = new _912Solution6();
 
         System.out.println(Arrays.toString(solution.sortArray(nums)));
 
@@ -36,7 +37,7 @@ class _912Solution1 {
 }
 
 /**
- * 解法二：手动实现快速排序
+ * 解法二：手动实现快速排序，平均时间复杂度：O(N*logn)
  */
 class _912Solution2 {
 
@@ -46,8 +47,8 @@ class _912Solution2 {
         }
 
         // 先分区，如果是升序，则小的放在参考值左边，大的放在参考值右边；如果是降序，则大的放在左边，小的放右边
-        //        int index = ascPartition(nums, left, right);
-        int index = descPartition(nums, left, right);
+        int index = ascPartition(nums, left, right);
+        //        int index = descPartition(nums, left, right);
 
         // 然后以参考值为中心，在其左右两个区间内再进行快排
         quickSort(nums, left, index - 1);
@@ -124,6 +125,89 @@ class _912Solution2 {
 
         quickSort(nums, 0, nums.length - 1);
 
+        return nums;
+    }
+}
+
+/**
+ * 解法三：手动实现归并排序
+ */
+class _912Solution3 {
+
+    public int[] sortArray(int[] nums) {
+        return nums;
+    }
+}
+
+/**
+ * 解法四：手动实现希尔排序
+ */
+class _912Solution4 {
+
+    public int[] sortArray(int[] nums) {
+        return nums;
+    }
+}
+
+/**
+ * 解法五：手动实现堆排序
+ */
+class _912Solution5 {
+
+    public int[] sortArray(int[] nums) {
+        return nums;
+    }
+}
+
+/**
+ * 解法六：手动实现冒泡排序，平均时间复杂度：O(N^2)
+ */
+class _912Solution6 {
+
+    public int[] sortArray(int[] nums) {
+        //        for (int i = 0; i < nums.length; ++i) {
+        //            for (int j = i + 1; j < nums.length; ++j) {
+        //                if (nums[i] > nums[j]) {
+        //                    swap(nums, i, j);
+        //                }
+        //            }
+        //        }
+
+        for (int i = 0; i < nums.length - 1; ++i) { // nums.length 个数，只需要进行 nums.length - 1 趟冒泡即可（即 n 个数确定了 n - 1 个数的顺序，则最后一个数自然也就确定了）
+            for (int j = 0; j < nums.length - 1 - i; ++j) {
+                if (nums[j] > nums[j + 1]) { // 升序
+                    //                if (nums[j] < nums[j + 1]) { // 降序
+                    swap(nums, j, j + 1);
+                }
+            }
+        }
+
+        return nums;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+}
+
+/**
+ * 解法七：手动实现插入排序
+ */
+class _912Solution7 {
+
+    public int[] sortArray(int[] nums) {
+        return nums;
+    }
+}
+
+/**
+ * 解法八：手动实现选择排序
+ */
+class _912Solution8 {
+
+    public int[] sortArray(int[] nums) {
         return nums;
     }
 }
