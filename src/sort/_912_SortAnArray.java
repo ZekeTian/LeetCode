@@ -18,7 +18,9 @@ public class _912_SortAnArray {
 
         //        _912Solution1 solution = new _912Solution1();
         //        _912Solution2 solution = new _912Solution2();
-        _912Solution6 solution = new _912Solution6();
+        //        _912Solution6 solution = new _912Solution6();
+        _912Solution7 solution = new _912Solution7();
+        //        _912Solution8 solution = new _912Solution8();
 
         System.out.println(Arrays.toString(solution.sortArray(nums)));
 
@@ -165,14 +167,6 @@ class _912Solution5 {
 class _912Solution6 {
 
     public int[] sortArray(int[] nums) {
-        //        for (int i = 0; i < nums.length; ++i) {
-        //            for (int j = i + 1; j < nums.length; ++j) {
-        //                if (nums[i] > nums[j]) {
-        //                    swap(nums, i, j);
-        //                }
-        //            }
-        //        }
-
         for (int i = 0; i < nums.length - 1; ++i) { // nums.length 个数，只需要进行 nums.length - 1 趟冒泡即可（即 n 个数确定了 n - 1 个数的顺序，则最后一个数自然也就确定了）
             for (int j = 0; j < nums.length - 1 - i; ++j) {
                 if (nums[j] > nums[j + 1]) { // 升序
@@ -198,6 +192,28 @@ class _912Solution6 {
 class _912Solution7 {
 
     public int[] sortArray(int[] nums) {
+
+        for (int i = 1; i < nums.length; ++i) { // 可以默认第一个数是有序的，因此 i 从 1 开始
+            // nums[0, i-1] 之间是有有序的，nums[i, nums.length-1] 之间是无序的，nums[i] 是正在排序的数
+            // 插入排序的思路是，将 nums[i] 插入到 nums[0, i-1] 之间合适的位置，使得有序区间增长，不断重复此过程使得有序区间长度最终等于整个数组的长度
+            int needSortNum = nums[i]; // 正在排序的数
+            int pos = i - 1; // 在 nums[0, i-1] 中第一个比 nums[i] 小的数的下标
+            
+            // 升序排序的，在 nums[0, i-1] 之间从后向前找，直到找到第一个比 nums[i] 小的数，然后停在此处，将 nums[i] 插入到该位置。
+            // 因为需要插入 nums[i]，所以 nums[0, i-1] 之间部分数字需要向后移动，腾出空位。
+            for (pos = i - 1; pos >= 0 && nums[pos] > needSortNum; --pos) {
+                nums[pos + 1] = nums[pos]; // 从后向前找，边找边向后移，从而为 needSortNum 腾出空位
+            }
+
+            // 降序排序的，在 nums[0, i-1] 之间从后向前找，直到找到第一个比 nums[i] 大的数，然后停在此处，将 nums[i] 插入到该位置。
+            // 因为需要插入 nums[i]，所以 nums[0, i-1] 之间部分数字需要向后移动，腾出空位。
+//            for (pos = i - 1; pos >= 0 && nums[pos] < needSortNum; --pos) {
+//                nums[pos + 1] = nums[pos];
+//            }
+
+            nums[pos + 1] = needSortNum; // 将正在排序的数放进正确的位置
+        }
+
         return nums;
     }
 }
@@ -207,7 +223,25 @@ class _912Solution7 {
  */
 class _912Solution8 {
 
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+
     public int[] sortArray(int[] nums) {
+
+        for (int i = 0; i < nums.length - 1; ++i) {
+            int targetIdx = i; // nums[0, i-1] 之间的数已经确定好顺序，新一轮从 i 开始确定
+            for (int j = i; j < nums.length; ++j) {
+                if (nums[j] < nums[targetIdx]) { // 升序，找 nums[i, nums.length - 1] 之间的最小值 
+                    //                if (nums[j] > nums[targetIdx]) { // 降序，找 nums[i, nums.length - 1] 之间的最大值 
+                    targetIdx = j;
+                }
+            }
+            swap(nums, i, targetIdx);
+        }
+
         return nums;
     }
 }
