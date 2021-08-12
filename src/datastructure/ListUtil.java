@@ -23,6 +23,36 @@ public class ListUtil {
     }
 
     /**
+     * 获取单身链表中的最后一个节点
+     */
+    public static ListNode lastElement(ListNode head) {
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+        ListNode cur = dummyHead;
+
+        while (null != cur.next) {
+            cur = cur.next;
+        }
+
+        return cur;
+    }
+    
+    /**
+     * 获取链表中 index 处的节点
+     */
+    public static ListNode get(ListNode head, int index) {
+        ListNode cur = head;
+        int count = 0;
+        
+        while (null != cur && count < index) {
+            cur = cur.next;
+            ++count;
+        }
+        
+        return cur;
+    }
+
+    /**
      * 获取链表中第一个值为 val 的节点
      * @param head 链表的头节点
      * @param val 待查找节点的值
