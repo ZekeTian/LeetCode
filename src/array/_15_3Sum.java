@@ -72,7 +72,7 @@ class _15Solution {
                             && nums[left + 1] == nums[left] /* 下一个值与当前值相等，则继续移动 left */) {
                         ++left;
                     }
-                    left -= 1; // 将 left 移动到新值的位置上
+                    left += 1; // 将 left 移动到新值的位置上
 
                     // 和 left 一样，right 也要移动到一个新值上
                     while (left < right && nums[right - 1] == nums[right]) {
