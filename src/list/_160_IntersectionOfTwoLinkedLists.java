@@ -47,19 +47,19 @@ public class _160_IntersectionOfTwoLinkedLists {
 
     public static void main(String[] args) {
         // test case 1, output: 8
-//        int[] numsA = {4, 1, 8, 4, 5};
-//        int[] numsB = {5, 0, 1};
-//        ListNode listA = ListUtil.createList(numsA);
-//        ListNode listB = ListUtil.createList(numsB);
-//        
-//        ListNode intersecionNode = ListUtil.get(listA, 2);
-//        ListUtil.lastElement(listB).next = intersecionNode;
-        
-        // test case, output: none
-        int[] numsA = {2, 6, 4};
-        int[] numsB = {1, 5};
+        int[] numsA = {4, 1, 8, 4, 5};
+        int[] numsB = {5, 0, 1};
         ListNode listA = ListUtil.createList(numsA);
         ListNode listB = ListUtil.createList(numsB);
+        
+        ListNode intersecionNode = ListUtil.get(listA, 2);
+        ListUtil.lastElement(listB).next = intersecionNode;
+        
+        // test case, output: none
+//        int[] numsA = {2, 6, 4};
+//        int[] numsB = {1, 5};
+//        ListNode listA = ListUtil.createList(numsA);
+//        ListNode listB = ListUtil.createList(numsB);
         
         
         _160Solution1 solution = new _160Solution1();
@@ -99,3 +99,58 @@ class _160Solution1 {
     }
 }
 
+/**
+ * 解法二：使用双指针
+ * 设置两个指针 a、b：
+ *  a 指针，在遍历完 listA 之后，遍历 listB；否则，继续遍历 listA；
+ *  b 指针，在遍历完 listB 之后，遍历 listA；否则，继续遍历 listB。
+ * 
+ * A、B 两个链表有交点时：
+ *    A 链表： A1 -> A2 -> ... -> Ai
+ *                                \
+ *                                 C1 -> C2 -> ... -> Cn
+ *                                /
+ *    B 链表： B1 -> B2 -> ... -> Bj
+ * 
+ * 将 A 链表中 [A1, Ai] 这段区间的长度记为 a；B 链表中 [B1, Bj] 这段区间的长度记为 b；后面公共部分 [C1, Cn] 这段区间的长度记为 c。
+ * a 指针到达 C1 节点时走过的长度 La = a + c + b
+ * b 指针到达 C1 节点时走过的长度 Lb = b + c + a
+ * 因为 La = Lb，并且 a、b 指针的速度一样，故 a、b 指针到达 C1 节点花费的时间也一样，又因为 a、b 同时出发，所以 a、b 会同时到达 C1 节点（即 a、b 在 C1 节点相遇）
+ * 
+ * 
+ * A、B 两个链表无交点时：
+ *    A 链表： A1 -> A2 -> ... -> Ai
+ *    B 链表： B1 -> B2 -> ... -> Bj
+ *    
+ * 将 A 链表的长度记为 a，B 链表的长度记为 b。
+ * a 指针在遍历完 listA 之后又会遍历 listB，当到达 listB 的结尾时，a 指针走过的长度 La = a + b
+ * b 指针在遍历完 listB 之后又会遍历 listA，当到达 listA 的结尾时，b 指针走过的长度 Lb = b + a
+ * 因为 La = Lb，并且 a、b 指针的速度一样，故 a、b 指针各自到达链表结尾（a 到达 listB 的结尾，b 到达 listA 的结尾）花费的时间也一样，
+ * 又因为 a、b 同时出发，所以 a、b 指针同时到达对应链表结尾（即 a、b 最终同时都指向 null，相当于在 null 节点相遇）
+ */
+class _160Solution2 {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode aPtr = headA; // a 指针，在遍历完 listA 之后，遍历 listB；否则，继续遍历 listA
+        ListNode bPtr = headB; // b 指针，在遍历完 listB 之后，遍历 listA；否则，继续遍历 listB
+        
+        // 无论 listA、listB 两个链表是否有交点，a、b 两个指针按照上述的遍历方式遍历 listA、listB，最终一定会相遇，所以 while 循环一定会结束
+        // 当 while 循环结束时，如果 listA、listB 两个链表有交点，则 a、b 两个指针同时指向交点，直接返回 a、b 指针中的一个即可；
+        // 否则，a、b 指针同时指向 null（即同时到两个链表的结尾）
+        while (aPtr != bPtr) {
+            
+            if (null == aPtr) {
+                aPtr = headB; // 开始遍历 listB
+            } else {
+                aPtr = aPtr.next;
+            }
+            
+            if (null == bPtr) {
+                bPtr = headA; // 开始遍历 listA
+            } else {
+                bPtr = bPtr.next;
+            }
+        }
+        
+        return (aPtr == null) ? null : aPtr;
+    }
+}
