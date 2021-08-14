@@ -20,16 +20,16 @@ import datastructure.ListUtil;
 public class _21_MergeTwoSortedLists {
     public static void main(String[] args) {
         // test case1, output: [1,1,2,3,4,4]
-        //        int[] nums1 = {1, 2, 4};
-        //        int[] nums2 = {1, 3, 4};
+        int[] nums1 = { 1, 2, 4 };
+        int[] nums2 = { 1, 3, 4 };
 
         // test case2, output: []
         //        int[] nums1 = {};
         //        int[] nums2 = {};
 
         // test case3, output: [0]
-        int[] nums1 = {};
-        int[] nums2 = { 0 };
+        //        int[] nums1 = {};
+        //        int[] nums2 = { 0 };
 
         ListNode l1 = ListUtil.createList(nums1);
         ListNode l2 = ListUtil.createList(nums2);
@@ -84,5 +84,31 @@ class _21Solution1 {
         }
 
         return dummHead.next;
+    }
+}
+
+/**
+ * 解法二：利用递归实现（本质上和解法一一样，只不过在两个链表中选择较小节点的过程用递归实现）
+ */
+class _21Solution2 {
+
+    private ListNode minNode(ListNode l1, ListNode l2) {
+        if (null == l1) {
+            return l2;
+        } else if (null == l2) {
+            return l1;
+        } else if (l1.val < l2.val) {
+            // 选出较小的节点：l1 链表的头节点，然后在 [l1.next...l1.tail] 这个区间的链表和 l2 这个链表中选择较小的节点，
+            // 之后将该较小的节点连到 l1 头节点之后，从而保证 l1 头节点代表的新链表是非递减的
+            l1.next = minNode(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = minNode(l1, l2.next);
+            return l2;
+        }
+    }
+
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        return minNode(l1, l2);
     }
 }
