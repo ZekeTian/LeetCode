@@ -20,21 +20,23 @@ import datastructure.ListUtil;
 public class _21_MergeTwoSortedLists {
     public static void main(String[] args) {
         // test case1, output: [1,1,2,3,4,4]
-        int[] nums1 = { 1, 2, 4 };
-        int[] nums2 = { 1, 3, 4 };
+        //        int[] nums1 = { 1, 2, 4 };
+        //        int[] nums2 = { 1, 3, 4 };
 
         // test case2, output: []
         //        int[] nums1 = {};
         //        int[] nums2 = {};
 
         // test case3, output: [0]
-        //        int[] nums1 = {};
-        //        int[] nums2 = { 0 };
+        int[] nums1 = {};
+        int[] nums2 = { 0 };
 
         ListNode l1 = ListUtil.createList(nums1);
         ListNode l2 = ListUtil.createList(nums2);
 
-        _21Solution1 solution = new _21Solution1();
+        //        _21Solution1 solution = new _21Solution1();
+
+        _21Solution2 solution = new _21Solution2();
 
         ListNode newList = solution.mergeTwoLists(l1, l2);
         ListUtil.print(newList);
@@ -92,6 +94,7 @@ class _21Solution1 {
  */
 class _21Solution2 {
 
+    // 在 l1、l2 两个链表中选择出较小的节点，并返回较小节点
     private ListNode minNode(ListNode l1, ListNode l2) {
         if (null == l1) {
             return l2;
