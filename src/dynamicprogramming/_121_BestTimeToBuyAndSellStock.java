@@ -25,14 +25,15 @@ package dynamicprogramming;
 public class _121_BestTimeToBuyAndSellStock {
     public static void main(String[] args) {
         // test case1, output: 5
-//        int[] prices = { 7, 1, 5, 3, 6, 4 };
+        int[] prices = { 7, 1, 5, 3, 6, 4 };
 
         // test case2, output: 0
-        int[] prices = { 7, 6, 4, 3, 1 };
-        
-        
-        _121Solution1 solution = new _121Solution1();
-        
+        //        int[] prices = { 7, 6, 4, 3, 1 };
+
+        //        _121Solution1 solution = new _121Solution1();
+
+        _121Solution2 solution = new _121Solution2();
+
         System.out.println(solution.maxProfit(prices));
     }
 }
@@ -53,5 +54,24 @@ class _121Solution1 {
         }
 
         return mem[prices.length - 1];
+    }
+}
+
+/**
+ * 解法二：动态规划的优化版本
+ *      在此题中，实际上只需要存储历史的最低股票价（便于计算当天利润）和最大利润（便于决定当天是否卖出股票）即可，不需要存储每天的利润。
+ *      所以解法一中动态规划的存储代价可以从 O(n)降低到 O(1)。
+ */
+class _121Solution2 {
+    public int maxProfit(int[] prices) {
+        int minPrice = prices[0]; // 历史最低股票价格
+        int maxProfitVal = 0; // 历史最大利润
+
+        for (int i = 1; i < prices.length; ++i) {
+            minPrice = Math.min(prices[i], minPrice);
+            maxProfitVal = Math.max(maxProfitVal, prices[i] - minPrice);
+        }
+
+        return maxProfitVal;
     }
 }
