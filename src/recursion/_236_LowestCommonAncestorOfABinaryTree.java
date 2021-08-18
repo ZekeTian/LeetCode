@@ -54,12 +54,12 @@ public class _236_LowestCommonAncestorOfABinaryTree {
         _236Solution1 solution = new _236Solution1();
         
         // test case1, output: 3
-        TreeNode p = node5;
-        TreeNode q = node1;
+//        TreeNode p = node5;
+//        TreeNode q = node1;
         
         // test case2, output: 5
-//        TreeNode p = node5;
-//        TreeNode q = node4;
+        TreeNode p = node5;
+        TreeNode q = node4;
         
         System.out.println(solution.lowestCommonAncestor(root, p, q).val);
     }
@@ -113,3 +113,39 @@ class _236Solution1 {
         return null;
     }
 }
+
+/**
+ * 解法二：递归过程中直接返回结果
+ * 
+ * 递归终止条件：当前节点为 null 或 当前节点为 p 或 当前节点为 q
+ * 在左子树中，寻找 p、q 的最近公共祖先，并保存结果
+ * 在右子树中，寻找 p、q 的最近公共祖先，并保存结果
+ * 
+ * 如果左子树返回的结果为空，则结果在右子树中，返回右子树的结果；
+ * 如果右子树返回的结果为空，则结果在左子树中，返回左子树的结果；
+ * 
+ * 如果左右子树均不为空，则左、右子树各有一个结果，此时 root 节点即为 p、q 的最近公共节点，直接将其返回即可
+ * 
+ */
+class _236Solution2 {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (null == root || root == p || root == q) {
+            return root;
+        }
+        
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        
+        if (null == left) {
+            return right;
+        }
+        
+        if (null == right) {
+            return left;
+        }
+        
+        // 此时，left 和 right 均不为 null，左右子树各一个结果，则当前节点即为 p、q 的最近公共祖先
+        return root;
+    }
+}
+
