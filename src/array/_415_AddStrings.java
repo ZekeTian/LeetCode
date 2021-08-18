@@ -95,3 +95,41 @@ class _415Solution1 {
         return builder.toString();
     }
 }
+
+/**
+ * 解法二：使用双指针模拟竖式相加
+ */
+class _415Solution2 {
+    public String addStrings(String num1, String num2) {
+        int i = num1.length() - 1;
+        int j = num2.length() - 1;
+        StringBuilder builder = new StringBuilder();
+        boolean flag = false; // 标记是否进位
+        
+        while (i >= 0 || j >= 0) {
+            int a = 0, b = 0;
+            if (i >= 0) {
+                a = num1.charAt(i--) - '0';
+            }
+            
+            if (j >= 0) {
+                b = num2.charAt(j--) - '0';
+            }
+            
+            int sum = (flag ? a + b + 1 : a + b);
+            if (sum <= 9) {
+                flag = false;
+                builder.insert(0, sum);
+            } else {
+                flag = true;
+                builder.insert(0, sum - 10);
+            }
+        }
+        
+        if (flag) {
+            builder.insert(0, 1);
+        }
+        
+        return builder.toString();
+    }
+}
