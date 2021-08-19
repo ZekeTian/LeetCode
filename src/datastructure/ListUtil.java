@@ -81,4 +81,21 @@ public class ListUtil {
 
         System.out.println("null");
     }
+
+    /**
+     * 获取 node 节点在链表中的下标，如果 node 存在于链表中，则返回相应下标；否则，返回 -1
+     */
+    public static int index(ListNode head, ListNode node) {
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+        ListNode cur = dummyHead;
+        int index = -1;
+        
+        while (cur != node) {
+            ++index;
+            cur = cur.next;
+        }
+        
+        return index;
+    }
 }
