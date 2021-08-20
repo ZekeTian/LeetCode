@@ -27,11 +27,11 @@ public class _142_LinkedListCycleII {
 
     public static void main(String[] args) {
         // test case1, output: tail connects to node index 1 
-        //        int[] nums = { 3, 2, 0, -4 };
-        //        ListNode head = ListUtil.createList(nums);
-        //        ListNode tail = ListUtil.lastElement(head);
-        //        ListNode node = ListUtil.get(head, 1);
-        //        tail.next = node;
+        int[] nums = { 3, 2, 0, -4 };
+        ListNode head = ListUtil.createList(nums);
+        ListNode tail = ListUtil.lastElement(head);
+        ListNode node = ListUtil.get(head, 1);
+        tail.next = node;
 
         // test case2, output: tail connects to node index 0
         //        int[] nums = { 1, 2 };
@@ -41,10 +41,11 @@ public class _142_LinkedListCycleII {
         //        tail.next = node;
 
         // test case3, output: no cycle
-        int[] nums = { 1 };
-        ListNode head = ListUtil.createList(nums);
+        //        int[] nums = { 1 };
+        //        ListNode head = ListUtil.createList(nums);
 
-        _142Solution1 solution = new _142Solution1();
+        //        _142Solution1 solution = new _142Solution1();
+        _142Solution2 solution = new _142Solution2();
 
         ListNode entrance = solution.detectCycle(head);
         if (null == entrance) {
@@ -74,5 +75,41 @@ class _142Solution1 {
         }
 
         return null;
+    }
+}
+
+/**
+ * 解法二：使用双指针
+ */
+class _142Solution2 {
+    public ListNode detectCycle(ListNode head) {
+        if (null == head) {
+            return null;
+        }
+
+        ListNode fast = head;
+        ListNode slow = head;
+
+        while (true) {
+            if (null == head.next || null == fast.next || null == fast.next.next) {
+                return null;
+            }
+
+            fast = fast.next.next;
+            slow = slow.next;
+
+            if (fast == slow) {
+                break; // 如果相遇，则说明有环，结束循环
+            }
+        }
+
+        // 将 fast 移到链表头节点处，然后 fast、slow 都向前走，但是每次都只移动一次，直到两个再次相遇为止，当两个再次相遇时，即为链表中环的入口节点
+        fast = head;
+        while (fast != slow) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+
+        return fast;
     }
 }
