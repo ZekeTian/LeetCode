@@ -33,13 +33,14 @@ public class _54_SpiralMatrix {
 
     public static void main(String[] args) {
         // test case1, output: 1,2,3,6,9,8,7,4,5
-//        int[][] martix = {{1,2,3},{4,5,6},{7,8,9}};
+        int[][] martix = {{1,2,3},{4,5,6},{7,8,9}};
         
         // test case2, otuput: 1,2,3,4,8,12,11,10,9,5,6,7
-        int[][] martix =  {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
+//        int[][] martix =  {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
         
         
-        _54Solution solution = new _54Solution();
+//        _54Solution1 solution = new _54Solution1();
+        _54Solution2 solution = new _54Solution2();
         
         System.out.println(solution.spiralOrder(martix));
         
@@ -47,10 +48,9 @@ public class _54_SpiralMatrix {
 }
 
 /**
- * 使用递归模拟顺时针螺旋遍历矩阵的过程
- *
+ * 使用递归模拟顺时针螺旋遍历矩阵的过程，实现方式一
  */
-class _54Solution {
+class _54Solution1 {
     private int[][] moves = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // 顺时针的四个移动方向
     private int moveIdx = 0; // moves 中的下标，用来标记当前移动的方向
     private int m = 0; // 行
@@ -100,4 +100,62 @@ class _54Solution {
         return result;
     }
 }
+
+/**
+ * 使用递归模拟顺时针螺旋遍历矩阵的过程，实现方式二
+ */
+class _54Solution2 {
+    private int[][] moves = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    private int moveIdx = 0;
+    private int m = 0;
+    private int n = 0;
+    private int[][] matrix = null;
+    private boolean[][] visited = null;
+    private List<Integer> result = null;
+    
+    private boolean inMatrix(int x, int y) {
+        return (x >= 0 && x < m) && (y >= 0 && y < n);
+    }
+    
+    // (x, y) 是当前顶点的位置
+    private void spiral(int x, int y) {
+        // 判断是否已经遍历完所有元素
+        if (result.size() == m * n) {
+            return;
+        }
+        
+        // 判断当前位置是否合法，如果不合法，则需要切换方向（即当前顶点不在矩阵中，或顶点已经访问过）
+        if (!inMatrix(x, y) /* 顶点不存在矩阵中，位置非法 */
+            || visited[x][y] /* 顶点已经访问过 */) {
+            // 因为当前位置无效，所以先退回原位置，然后再切换方向，之后移动到新位置
+            // 退回原位置
+            x -= moves[moveIdx % 4][0];
+            y -= moves[moveIdx % 4][1];
+            
+            ++moveIdx; // 切换方向
+        } else {
+            result.add(matrix[x][y]);
+            visited[x][y] = true;
+        }
+        
+        // 移动到新位置
+        x += moves[moveIdx % 4][0];
+        y += moves[moveIdx % 4][1];
+        
+        spiral(x, y);
+    }
+    
+    public List<Integer> spiralOrder(int[][] matrix) {
+        this.m = matrix.length;
+        this.n = matrix[0].length;
+        this.matrix = matrix;
+        this.visited = new boolean[m][n];
+        this.result = new ArrayList<Integer>();
+        
+        spiral(0, 0);
+        
+        return result;
+    }
+}
+
 
