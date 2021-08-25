@@ -20,7 +20,8 @@ public class _206_ReverseLinkedList {
 
     public static void main(String[] args) {
 //        _206Solution1 solution = new _206Solution1();
-        _206Solution2 solution = new _206Solution2();
+//        _206Solution2 solution = new _206Solution2();
+        _206Solution3 solution = new _206Solution3();
 
         int[] nums = { 1, 2, 3, 4, 5 };
 //        int[] nums = { 1 };
@@ -95,5 +96,35 @@ class _206Solution2 {
         head = pre;
         
         return head;
+    }
+}
+
+/**
+ * 递归实现
+ */
+class _206Solution3 {
+    ListNode newHead = null;
+    
+    private ListNode reverse(ListNode cur) {
+        if (null == cur.next) {
+            newHead = cur; // 到达尾节点，将尾节点标记成新的头节点
+            return cur;
+        }
+        
+        ListNode res = reverse(cur.next);
+        res.next = cur; // 进行反转
+        
+        return cur;
+    }
+    
+    public ListNode reverseList(ListNode head) {
+        if (null == head) {
+            return null;
+        }
+        
+        ListNode tail = reverse(head);
+        tail.next = null;
+        
+        return newHead;
     }
 }
