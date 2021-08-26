@@ -30,14 +30,14 @@ public class _92_ReverseLinkedListII {
         _92Solution1 solution = new _92Solution1();
 
         // test case 1, output: [1,4,3,2,5]
-        int[] nums = { 1, 2, 3, 4, 5 };
-        ListNode head = ListUtil.createList(nums);
-        head = solution.reverseBetween(head, 2, 4);
+        //        int[] nums = { 1, 2, 3, 4, 5 };
+        //        ListNode head = ListUtil.createList(nums);
+        //        head = solution.reverseBetween(head, 2, 4);
 
         // test case 2, output: [5]
-        //        int[] nums = { 5 };
-        //        ListNode head = ListUtil.createList(nums);
-        //        head = solution.reverseBetween(head, 1, 1);
+        int[] nums = { 5 };
+        ListNode head = ListUtil.createList(nums);
+        head = solution.reverseBetween(head, 1, 1);
 
         ListUtil.print(head);
 
@@ -89,5 +89,34 @@ class _92Solution1 {
 
         tmpPreNode.next = tmpNewHead;
         return head; // 原始链表的头节点不参与反转，所以其还是头节点
+    }
+}
+
+/**
+ * 解法二：使用头插法
+ */
+class _92Solution2 {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+
+        ListNode cur = dummyHead;
+        for (int i = 0; i < left - 1; ++i) {
+            cur = cur.next;
+        }
+
+        ListNode tmpHead = cur; // 临时的链表头节点，即原始链表反转区间内前一个节点
+        ListNode tmpTail = cur.next; // 反转链表的尾节点
+
+        for (int i = 0; i < right - left; ++i) {
+            cur = tmpTail.next; // 此时，cur 节点表示正在反转的节点
+            tmpTail.next = cur.next;
+            
+            // 用头插法插入 cur 节点
+            cur.next = tmpHead.next;
+            tmpHead.next = cur;
+        }
+
+        return dummyHead.next;
     }
 }
