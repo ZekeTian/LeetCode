@@ -23,8 +23,8 @@ public class _206_ReverseLinkedList {
 //        _206Solution2 solution = new _206Solution2();
         _206Solution3 solution = new _206Solution3();
 
-        int[] nums = { 1, 2, 3, 4, 5 };
-//        int[] nums = { 1 };
+//        int[] nums = { 1, 2, 3, 4, 5 };
+        int[] nums = { 1 };
         ListNode head = ListUtil.createList(nums);
         
 //        ListNode head = null;
@@ -128,3 +128,29 @@ class _206Solution3 {
         return newHead;
     }
 }
+
+/**
+ * 使用头插法实现
+ */
+class _206Solution4 {
+    public ListNode reverseList(ListNode head) {
+        if (null == head) {
+            return null;
+        }
+        
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+        ListNode tailNode = head; // 链表反转后的尾节点
+
+        while (null != tailNode.next) {
+            ListNode cur = tailNode.next; // 正在反转的节点
+            tailNode.next = cur.next;
+            // 头插法插入 cur 节点
+            cur.next = dummyHead.next;
+            dummyHead.next = cur;
+        }
+        
+        return dummyHead.next;
+    }
+}
+
