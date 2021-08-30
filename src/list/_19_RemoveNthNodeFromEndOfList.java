@@ -1,5 +1,8 @@
 package list;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import datastructure.ListNode;
 import datastructure.ListUtil;
 
@@ -22,11 +25,12 @@ public class _19_RemoveNthNodeFromEndOfList {
 
     public static void main(String[] args) {
         int[] nums = { 1, 2, 3, 4, 5 };
-        //        int[] nums = { 1 };
+        //                int[] nums = { 1 };
         ListNode head = ListUtil.createList(nums);
 
         ListUtil.print(head);
-        head = new _19Solution2().removeNthFromEnd(head, 2);
+        //        head = new _19Solution2().removeNthFromEnd(head, 2);
+        head = new _19Solution3().removeNthFromEnd(head, 2);
         ListUtil.print(head);
     }
 }
@@ -87,6 +91,31 @@ class _19Solution2 {
         ListNode del = node1.next;
         node1.next = del.next;
         del.next = null;
+
+        return dummyHead.next;
+    }
+}
+
+/**
+ * 解法三：只遍历一次，但是使用 map 存储每个位置对应的节点
+ */
+class _19Solution3 {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+        int count = 0; // 统计链表中节点个数
+        ListNode cur = dummyHead;
+        Map<Integer, ListNode> map = new HashMap<>();
+        while (cur != null) {
+            map.put(count++, cur);
+            cur = cur.next;
+        }
+
+        ListNode pre = map.get(count - n - 1);
+        ListNode node = map.get(count - n);
+
+        pre.next = node.next;
+        node.next = null;
 
         return dummyHead.next;
     }
