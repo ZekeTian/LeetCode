@@ -26,17 +26,18 @@ public class _2_AddTwoNumbers {
 
     public static void main(String[] args) {
         // test case1, output: [7,0,8]
-        //        int[] num1 = {2, 4, 3};
-        //        int[] num2= {5, 6, 4};
+        int[] num1 = { 2, 4, 3 };
+        int[] num2 = { 5, 6, 4 };
 
         // test case1, output: [8,9,9,9,0,0,0,1]
-        int[] num1 = { 9, 9, 9, 9, 9, 9, 9 };
-        int[] num2 = { 9, 9, 9, 9 };
+        //        int[] num1 = { 9, 9, 9, 9, 9, 9, 9 };
+        //        int[] num2 = { 9, 9, 9, 9 };
 
         ListNode l1 = ListUtil.createList(num1);
         ListNode l2 = ListUtil.createList(num2);
 
-        _2Solution1 solution = new _2Solution1();
+        //        _2Solution1 solution = new _2Solution1();
+        _2Solution2 solution = new _2Solution2();
 
         ListNode result = solution.addTwoNumbers(l1, l2);
         ListUtil.print(result);
@@ -83,5 +84,47 @@ class _2Solution1 {
         }
 
         return dummyHead.next;
+    }
+}
+
+/**
+ * 解法二：利用递归模拟两个数相加
+ */
+class _2Solution2 {
+
+    private ListNode add(ListNode head1, ListNode head2, boolean flag) {
+        if (null == head1 && null == head2) {
+            // 两个链表都遍历完，则结束整个相加的过程。但是在结束时，需要判断最后一次相加是否产生进位，如果产生进位，则还需要创建一个节点
+            ListNode node = null;
+            if (flag) {
+                node = new ListNode();
+                node.val = 1;
+            }
+            return node;
+        }
+        ListNode next1 = null;
+        int num1 = 0;
+        if (null != head1) {
+            num1 = head1.val;
+            next1 = head1.next;
+        }
+
+        ListNode next2 = null;
+        int num2 = 0;
+        if (null != head2) {
+            num2 = head2.val;
+            next2 = head2.next;
+        }
+
+        ListNode node = new ListNode();
+        int num = (flag ? num1 + num2 + 1 : num1 + num2);
+        node.val = num % 10;
+        node.next = add(next1, next2, num >= 10);
+
+        return node;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        return add(l1, l2, false);
     }
 }
