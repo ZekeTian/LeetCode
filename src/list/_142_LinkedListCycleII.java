@@ -91,7 +91,7 @@ class _142Solution2 {
         ListNode slow = head;
 
         while (true) {
-            if (null == head.next || null == fast.next || null == fast.next.next) {
+            if (null == slow.next || null == fast.next || null == fast.next.next) {
                 return null;
             }
 
