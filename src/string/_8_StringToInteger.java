@@ -1,5 +1,8 @@
 package string;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * https://leetcode.com/problems/string-to-integer-atoi/
  * 
@@ -75,12 +78,12 @@ public class _8_StringToInteger {
 
         // test case 4, output: 0
         //        String s = "words and 987";
-        
+
         // test case 5, output: -2147483648 
-//        String s = "-91283472332";
-        
+        //        String s = "-91283472332";
+
         // test case 6, output: 2147483647 
-        String s = "3147483648";
+        //        String s = "3147483648";
 
         // test case 7, output: 0
         //        String s = "    0000000000000   ";
@@ -89,9 +92,10 @@ public class _8_StringToInteger {
         //        String s = "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000522545459";
 
         // test case 9, output: 0
-        //        String s = " +-11";
+        String s = " +-11";
 
-        _8Solution1 solution = new _8Solution1();
+        //        _8Solution1 solution = new _8Solution1();
+        _8Solution2 solution = new _8Solution2();
 
         System.out.println(solution.myAtoi(s));
 
@@ -171,6 +175,72 @@ class _8Solution1 {
             num = (num > Integer.MAX_VALUE ? Integer.MAX_VALUE : num); // 如果是正数，则判断是否超过最大值
         } else {
             num = (-num < Integer.MIN_VALUE ? Integer.MIN_VALUE : -num); // 如果是负数，则判断是否超过最小值
+        }
+
+        return (int) num;
+    }
+}
+
+/**
+ * 解法二：使用正则表达式撮取出整数
+ */
+class _8Solution2 {
+    public int myAtoi(String s) {
+        Pattern pattern = Pattern.compile("(^[ ]*[-+]?\\d+)");
+
+        Matcher matcher = pattern.matcher(s);
+
+        if (!matcher.find()) {
+            return 0;
+        }
+
+        // 提取出匹配的部分
+        String numStr = matcher.group(0);
+
+        // 删除前导空格
+        numStr = numStr.replaceAll(" ", "");
+
+        if (numStr.length() == 0) {
+            return 0;
+        }
+
+        // 提取出符号位
+        boolean flag = true; // true 表示正数，false 表示负数
+        if (numStr.charAt(0) == '+') {
+            flag = true;
+            numStr = numStr.substring(1);
+        } else if (numStr.charAt(0) == '-') {
+            flag = false;
+            numStr = numStr.substring(1);
+        }
+
+        // 删除前导 0，提取出最终的有效部分整数
+        int noZeroIndex = 0;
+        for (noZeroIndex = 0; noZeroIndex < numStr.length(); ++noZeroIndex) {
+            if (numStr.charAt(noZeroIndex) != '0') {
+                break;
+            }
+        }
+        numStr = numStr.substring(noZeroIndex);
+
+        // 判断有效部分整数长度
+        if (numStr.length() > 10) { // 超出 int 范围
+            int num = (flag ? Integer.MAX_VALUE : Integer.MIN_VALUE);
+            return num;
+        }
+
+        // 转换成整数
+        long num = 0;
+        long a = 1;
+        for (int i = numStr.length() - 1; i >= 0; --i) {
+            num = num + (numStr.charAt(i) - '0') * a;
+            a *= 10;
+        }
+
+        if (flag) {
+            num = (num > Integer.MAX_VALUE ? Integer.MAX_VALUE : num);
+        } else {
+            num = (-num < Integer.MIN_VALUE ? Integer.MIN_VALUE : -num);
         }
 
         return (int) num;
