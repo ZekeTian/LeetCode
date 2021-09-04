@@ -1,5 +1,6 @@
 package string;
 
+import java.util.Stack;
 import java.util.StringJoiner;
 
 /**
@@ -31,11 +32,17 @@ public class _151_ReverseWordsInAString {
 
     public static void main(String[] args) {
         // test case 1, output: "blue is sky the"
-//        String s = "the sky is blue";
-        String s = "  Bob    Loves  Alice   ";
-        
-        _151Solution1 solution = new _151Solution1();
-        
+        //        String s = "the sky is blue";
+
+        // test case 2, output: "Alice Loves Bob"
+        //        String s = "  Bob    Loves  Alice   ";
+
+        // test case 3, output: "c bb aa"
+        String s = "  aa bb c   ";
+
+        //        _151Solution1 solution = new _151Solution1();
+        _151Solution2 solution = new _151Solution2();
+
         System.out.println(solution.reverseWords(s));
     }
 }
@@ -46,13 +53,48 @@ public class _151_ReverseWordsInAString {
 class _151Solution1 {
     public String reverseWords(String s) {
         StringJoiner joiner = new StringJoiner(" ");
-        s = s.replaceFirst("^\\s+", ""); // 删除前导空格
+        s = s.trim(); // 删除前面和后面的空格
         String[] split = s.split("\\s+");
-        
+
         for (int i = split.length - 1; i >= 0; --i) {
             joiner.add(split[i]);
         }
-        
+
+        return joiner.toString();
+    }
+}
+
+/**
+ * 解法二：循环分割出单词，然后通过栈反转
+ */
+class _151Solution2 {
+    public String reverseWords(String s) {
+        Stack<String> stack = new Stack<>();
+        int start = 0;
+        // 分割出单词
+        for (int i = 0; i < s.length(); ++i) {
+            char ch = s.charAt(i);
+
+            if (ch != ' ') {
+                if (i > 0 && s.charAt(i - 1) == ' ') { // 当前字符不是空格，但是前一个字符是空格，则当前字符是单词的首字符
+                    start = i;
+                }
+                if (i == s.length() - 1) {
+                    stack.push(s.substring(start, s.length())); // 到达最后一个字符，将最后一个单词分割出来
+                }
+            } else {
+                if (i > 0 && s.charAt(i - 1) != ' ') { // 当前字符是空格，但是前一个字符不是空格，则当前字符是单词后的字符
+                    stack.push(s.substring(start, i));
+                }
+            }
+        }
+
+        // 通过栈反转单词
+        StringJoiner joiner = new StringJoiner(" ");
+        while (!stack.isEmpty()) {
+            joiner.add(stack.pop());
+        }
+
         return joiner.toString();
     }
 }
