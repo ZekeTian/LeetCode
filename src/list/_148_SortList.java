@@ -9,7 +9,13 @@ import datastructure.ListUtil;
  * 题目描述：给你链表的头结点 head ，请将其按 升序 排列并返回 排序后的链表 。
  *                  你可以在 O(n log n) 时间复杂度和常数级空间复杂度下，对链表进行排序吗？
  *                  
- *                  
+ *  条件限制：
+ *      （1）链表中节点的数目在范围 [0, 5 * 10^4] 内
+ *      （2）-10^5 <= Node.val <= 10^5
+ *      
+ * 示例：
+ *      Input: 4, 2, 1, 3
+ *      Output: 1, 2, 3, 4
  */
 public class _148_SortList {
 
