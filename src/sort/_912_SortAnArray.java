@@ -18,8 +18,9 @@ public class _912_SortAnArray {
 
         //        _912Solution1 solution = new _912Solution1();
         //        _912Solution2 solution = new _912Solution2();
+        _912Solution3 solution = new _912Solution3();
         //        _912Solution6 solution = new _912Solution6();
-        _912Solution7 solution = new _912Solution7();
+        //        _912Solution7 solution = new _912Solution7();
         //        _912Solution8 solution = new _912Solution8();
 
         System.out.println(Arrays.toString(solution.sortArray(nums)));
@@ -137,7 +138,41 @@ class _912Solution2 {
 class _912Solution3 {
 
     public int[] sortArray(int[] nums) {
-        return nums;
+        if (1 == nums.length) {
+            return nums;
+        }
+
+        // 将 nums 一分为二，对左右两部分各自排序
+        int mid = nums.length / 2;
+        int[] nums1 = sortArray(Arrays.copyOfRange(nums, 0, mid));
+        int[] nums2 = sortArray(Arrays.copyOfRange(nums, mid, nums.length));
+
+        // 对两个有序的数组进行归并排序
+        int[] newNums = new int[nums1.length + nums2.length];
+        int i = 0, j = 0, k = 0;
+        while (i < nums1.length && j < nums2.length) {
+            // 升序
+            if (nums1[i] < nums2[j]) {
+                newNums[k++] = nums1[i++];
+            } else {
+                newNums[k++] = nums2[j++];
+            }
+
+            // 降序
+            //            if (nums1[i] < nums2[j]) {
+            //                newNums[k++] = nums2[j++];
+            //            } else {
+            //                newNums[k++] = nums1[i++];
+            //            }
+        }
+        while (i < nums1.length) {
+            newNums[k++] = nums1[i++];
+        }
+        while (j < nums2.length) {
+            newNums[k++] = nums2[j++];
+        }
+
+        return newNums;
     }
 }
 
@@ -198,7 +233,7 @@ class _912Solution7 {
             // 插入排序的思路是，将 nums[i] 插入到 nums[0, i-1] 之间合适的位置，使得有序区间增长，不断重复此过程使得有序区间长度最终等于整个数组的长度
             int needSortNum = nums[i]; // 正在排序的数
             int pos = i - 1; // 在 nums[0, i-1] 中第一个比 nums[i] 小的数的下标
-            
+
             // 升序排序的，在 nums[0, i-1] 之间从后向前找，直到找到第一个比 nums[i] 小的数，然后停在此处，将 nums[i] 插入到该位置。
             // 因为需要插入 nums[i]，所以 nums[0, i-1] 之间部分数字需要向后移动，腾出空位。
             for (pos = i - 1; pos >= 0 && nums[pos] > needSortNum; --pos) {
@@ -207,9 +242,9 @@ class _912Solution7 {
 
             // 降序排序的，在 nums[0, i-1] 之间从后向前找，直到找到第一个比 nums[i] 大的数，然后停在此处，将 nums[i] 插入到该位置。
             // 因为需要插入 nums[i]，所以 nums[0, i-1] 之间部分数字需要向后移动，腾出空位。
-//            for (pos = i - 1; pos >= 0 && nums[pos] < needSortNum; --pos) {
-//                nums[pos + 1] = nums[pos];
-//            }
+            //            for (pos = i - 1; pos >= 0 && nums[pos] < needSortNum; --pos) {
+            //                nums[pos + 1] = nums[pos];
+            //            }
 
             nums[pos + 1] = needSortNum; // 将正在排序的数放进正确的位置
         }
