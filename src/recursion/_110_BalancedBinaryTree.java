@@ -13,29 +13,29 @@ import datastructure.TreeNode;
  *  （2）-10^4 <= Node.val <= 10^4
  *
  * 示例：
- *      示例 1
- *                          3
- *                        /   \
- *                      9     20
- *                           /     \
- *                         15    7
- *      Input: root = [3,9,20,null,null,15,7]
- *      Output: true
- *      
- *      示例 2
- *                         1
- *                       /   \
- *                     2     2
- *                   /  \
- *                 3    3
+ *   示例 1
+ *              3
+ *             /  \
+ *            9   20
  *               /  \
- *              4   4
- *     Input: root = [1,2,2,3,3,null,null,4,4]
- *     Output: false
- *     
- *     示例 3
- *     Input: root = []
- *     Output: true
+ *             15    7
+ *   Input: root = [3,9,20,null,null,15,7]
+ *   Output: true
+ *   
+ *   示例 2
+ *             1
+ *            / \
+ *           2   2
+ *          / \
+ *         3   3
+ *        / \
+ *       4   4
+ *  Input: root = [1,2,2,3,3,null,null,4,4]
+ *  Output: false
+ *  
+ *  示例 3
+ *  Input: root = []
+ *  Output: true
  */
 public class _110_BalancedBinaryTree {
 
