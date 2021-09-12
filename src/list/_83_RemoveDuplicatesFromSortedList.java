@@ -26,7 +26,11 @@ import datastructure.ListUtil;
 public class _83_RemoveDuplicatesFromSortedList {
 
     public static void main(String[] args) {
-        int[] nums = {1, 1, 2};
+        // test case 1, output: 1,2
+        // int[] nums = {1, 1, 2};
+
+        // test case 2, output: 1,2,3
+        int[] nums = {1, 1, 2, 3, 3};
         ListNode head = ListUtil.createList(nums);
         
         _83Solution1 solution = new _83Solution1();
@@ -50,5 +54,26 @@ class _83Solution1 {
             head.next = deleteDuplicates(head.next); // 当前节点与下一个节点的值不同，则当前节点可以加入到链表中
             return head;
         }
+    }
+}
+
+/**
+ * 解法二：使用迭代
+ */
+class _83Solution2 {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode cur = head;
+        
+        while (null != cur) {
+            ListNode next = cur.next;
+            while (null != next && cur.val == next.val) {
+                next = next.next;
+            }
+            
+            cur.next = next;
+            cur = next;
+        }
+        
+        return head;
     }
 }
