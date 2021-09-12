@@ -30,6 +30,7 @@ public class _144_BinaryTreePreorderTraversal {
 
         //        _144Solution1 solution = new _144Solution1();
         _144Solution2 solution = new _144Solution2();
+        //        _144Solution3 solution = new _144Solution3();
 
         System.out.println(solution.preorderTraversal(root));
     }
@@ -64,9 +65,38 @@ class _144Solution1 {
 }
 
 /**
- * 使用非递归方式实现。此方法不是常规的经典非递归实现，而是采用模拟系统栈的方式实现，思路更加通用，可用于先、中、后三种任意遍历方式。
+ * 解法二：使用栈实现非递归遍历（经典实现）
  */
 class _144Solution2 {
+
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> resulList = new ArrayList<>();
+        if (null == root) {
+            return resulList;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            resulList.add(node.val);
+
+            if (null != node.right) {
+                stack.push(node.right);
+            }
+            if (null != node.left) {
+                stack.push(node.left);
+            }
+        }
+
+        return resulList;
+    }
+}
+
+/**
+ * 解法三：使用非递归方式实现。此方法不是常规的经典非递归实现，而是采用模拟系统栈的方式实现，思路更加通用，可用于先、中、后三种任意遍历方式。
+ */
+class _144Solution3 {
     /**
      * 执行命令，用于模拟系统栈
      */
