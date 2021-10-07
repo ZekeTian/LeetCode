@@ -43,6 +43,8 @@ public class _34_FindFirstAndLastPositionOfElementInSortedArray {
         //        int[] nums = {};
         //        int target = 6;
 
+        //        _34Solution1 solution = new _34Solution1();
+        
         _34Solution2 solution = new _34Solution2();
         int[] range = solution.searchRange(nums, target);
 
@@ -56,22 +58,22 @@ public class _34_FindFirstAndLastPositionOfElementInSortedArray {
  * 解法一：利用循环实现
  */
 class _34Solution1 {
-    
+
     public int[] searchRange(int[] nums, int target) {
         int lower = -1;
         int upper = -1;
-        
+
         for (int i = 0; i < nums.length; ++i) {
             if (target == nums[i]) {
                 if (-1 == lower) {
                     lower = i; // 下边界（即左边界）只能赋值一次，通过 lowwer 的值来判断，如果是 -1 ，则没有被赋值过，说明 nums[i] 是第一个等于 target 的数 
                 }
-                
+
                 upper = i; // 上边界（即右边界）不断赋值，最终 upper 即为最后一个等于 target 的数所在的位置
             }
         }
-        
-        return new int[] {lower, upper};
+
+        return new int[] { lower, upper };
     }
 }
 
