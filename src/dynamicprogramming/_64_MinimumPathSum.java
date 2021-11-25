@@ -30,7 +30,8 @@ public class _64_MinimumPathSum {
         int[][] grid = { { 1, 3, 1 }, { 1, 5, 1 }, { 4, 2, 1 } };
         
 //        _64Solution1 solution = new _64Solution1();
-        _64Solution2 solution = new _64Solution2();
+//        _64Solution2 solution = new _64Solution2();
+        _64Solution3 solution = new _64Solution3();
         
         System.out.println(solution.minPathSum(grid));
     }
@@ -115,6 +116,32 @@ class _64Solution2 {
         }
         
         getMinPathSum(0, 0);
+        
+        return memo[0][0];
+    }
+}
+
+/**
+ * 解法三：自底向上动态规划
+ */
+class _64Solution3 {
+    
+    public int minPathSum(int[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int[][] memo = new int[row][col];
+        
+        memo[row - 1][col - 1] = grid[row - 1][col - 1]; // 右下角的值为原始值
+        for (int i = col - 2; i >= 0; --i) {
+            memo[row - 1][i] = grid[row - 1][i] + memo[row - 1][i + 1]; // 最后一行初始化
+        }
+        
+        for (int i = row - 2; i >= 0; --i) {
+            memo[i][col - 1] = grid[i][col - 1] + memo[i + 1][col - 1]; // 最后一列，只能向下走
+            for (int j = col - 2; j >= 0; --j) {
+                memo[i][j] = grid[i][j] + Math.min(memo[i + 1][j], memo[i][j + 1]); // 取向下、向右两种走法的最小值
+            }
+        }
         
         return memo[0][0];
     }
