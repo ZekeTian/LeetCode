@@ -29,7 +29,8 @@ public class _64_MinimumPathSum {
         // test case, output: 7
         int[][] grid = { { 1, 3, 1 }, { 1, 5, 1 }, { 4, 2, 1 } };
         
-        _64Solution1 solution = new _64Solution1();
+//        _64Solution1 solution = new _64Solution1();
+        _64Solution2 solution = new _64Solution2();
         
         System.out.println(solution.minPathSum(grid));
     }
@@ -66,5 +67,55 @@ class _64Solution1 {
         col = grid[0].length;
         
         return getMinPathSum(0, 0);
+    }
+}
+
+
+/**
+ * 解法二：递归 + 记忆化
+ */
+class _64Solution2 {
+    private int[][] grid = null;
+    private int[][] memo = null;
+    private int row = 0;
+    private int col = 0;
+    
+    private int getMinPathSum(int r, int c) {
+        if (r == row - 1 && c == col - 1) {
+            memo[r][c] = grid[r][c];
+            return grid[r][c];
+        }
+        
+        if (-1 != memo[r][c]) {
+            return memo[r][c]; // 已经计算，则直接返回
+        }
+        
+        if (c == col - 1) {
+            memo[r][c] = grid[r][c] + getMinPathSum(r + 1, c); // 最后一列，向下走
+            return memo[r][c];
+        }
+        
+        if (r == row - 1) {
+            memo[r][c] = grid[r][c] + getMinPathSum(r, c + 1); // 最后一行，向右走
+            return memo[r][c];
+        }
+        
+        memo[r][c] = grid[r][c] + Math.min(getMinPathSum(r + 1, c), getMinPathSum(r, c + 1));
+        return memo[r][c];
+    }
+    
+    public int minPathSum(int[][] grid) {
+        this.grid = grid;
+        this.row = grid.length;
+        this.col = grid[0].length;
+        this.memo = new int[row][col];
+        
+        for (int i = 0; i < row; ++i) {
+            Arrays.fill(memo[i], -1);
+        }
+        
+        getMinPathSum(0, 0);
+        
+        return memo[0][0];
     }
 }
