@@ -1,5 +1,7 @@
 package dynamicprogramming;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,7 +30,26 @@ import java.util.List;
 public class _120_Triangle {
 
     public static void main(String[] args) {
+        // test case, [[2],[3,4],[6,5,7],[4,1,8,3]], output: 11
+        List<List<Integer>> triangle = new ArrayList<>();
+        for (int i = 0; i < 4; ++i) {
+            triangle.add(new ArrayList<>());
+        }
+        triangle.get(0).add(2);
+        triangle.get(1).add(3);
+        triangle.get(1).add(4);
+        triangle.get(2).add(6);
+        triangle.get(2).add(5);
+        triangle.get(2).add(7);
+        triangle.get(3).add(4);
+        triangle.get(3).add(1);
+        triangle.get(3).add(8);
+        triangle.get(3).add(3);
         
+//        _120Solution1 solution = new _120Solution1();
+        _120Solution2 solution = new _120Solution2();
+        
+        System.out.println(solution.minimumTotal(triangle));
     }
 }
 
@@ -50,6 +71,43 @@ class _120Solution1 {
     public int minimumTotal(List<List<Integer>> triangle) {
         this.triangel = triangle;
         return minimum(0, 0);
+    }
+}
+
+/**
+ * 解法二：递归 + 记忆化
+ */
+class _120Solution2 {
+    
+    private List<List<Integer>> triangle = null;
+    private int[][] memo = null;
+    
+    private int minimum(int row, int col) {
+        if (row == triangle.size() - 1) {
+            memo[row][col] = triangle.get(row).get(col);
+            return memo[row][col];
+        }
+        
+        if (Integer.MIN_VALUE != memo[row][col]) {
+            return memo[row][col];
+        }
+        
+        memo[row][col] = triangle.get(row).get(col) + Math.min(minimum(row + 1, col), minimum(row + 1, col + 1));
+        
+        return memo[row][col];
+    }
+    
+    public int minimumTotal(List<List<Integer>> triangle) {
+        this.triangle = triangle;
+        this.memo = new int[triangle.size()][triangle.size()];
+        
+        for (int i = 0; i < memo.length; ++i) {
+            Arrays.fill(memo[i], Integer.MIN_VALUE);
+        }
+        
+        
+        minimum(0, 0);
+        return memo[0][0];
     }
 }
 
