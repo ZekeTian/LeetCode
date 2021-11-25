@@ -47,7 +47,8 @@ public class _120_Triangle {
         triangle.get(3).add(3);
         
 //        _120Solution1 solution = new _120Solution1();
-        _120Solution2 solution = new _120Solution2();
+//        _120Solution2 solution = new _120Solution2();
+        _120Solution3 solution = new _120Solution3();
         
         System.out.println(solution.minimumTotal(triangle));
     }
@@ -107,6 +108,29 @@ class _120Solution2 {
         
         
         minimum(0, 0);
+        return memo[0][0];
+    }
+}
+
+/**
+ * 解法三：自底向上动态规划
+ */
+class _120Solution3 {
+    
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int row = triangle.size();
+        int[][] memo = new int[row][row];
+        
+        for (int i = 0; i < row; ++i) {
+            memo[row - 1][i] = triangle.get(row - 1).get(i); // 初始化最后一行的结果
+        }
+        
+        for (int i = row - 2; i >= 0; --i) {
+            for (int j = 0; j <= i; ++j) {
+                memo[i][j] = triangle.get(i).get(j) + Math.min(memo[i + 1][j], memo[i + 1][j + 1]);
+            }
+        }
+        
         return memo[0][0];
     }
 }
