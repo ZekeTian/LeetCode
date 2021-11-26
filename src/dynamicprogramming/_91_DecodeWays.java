@@ -52,7 +52,9 @@ public class _91_DecodeWays {
         
 //        _91Solution1 solution = new _91Solution1();
 
-        _91Solution2 solution = new _91Solution2();
+//        _91Solution2 solution = new _91Solution2();
+
+        _91Solution3 solution = new _91Solution3();
         
         
         System.out.println(solution.numDecodings(s));
@@ -131,6 +133,31 @@ class _91Solution2 {
         Arrays.fill(memo, -1);
         
         getNumDecodings(0);
+        
+        return memo[0];
+    }
+}
+
+
+/**
+ * 解法三：自底向上动态规划
+ */
+class _91Solution3 {
+
+    public int numDecodings(String s) {
+        int[] memo = new int[s.length() + 1]; // memo[i] 表示 s[i...len] 之间的解码方式个数
+        memo[s.length()] = 1; // 解码到字符串结尾处，则可以算一种有效解码
+        memo[s.length() - 1] = ('0' == s.charAt(s.length() - 1) ? 0 : 1);
+        
+        for (int i = s.length() - 2; i >= 0; --i) {
+            if ('0' != s.charAt(i)) {
+                if (Integer.parseInt(s.substring(i, i + 2)) <= 26) {
+                    memo[i] = memo[i + 1] + memo[i + 2]; // 一次可以解码两位或一位
+                } else {
+                    memo[i] = memo[i + 1]; // 一次只能解码一位
+                }
+            }
+        }
         
         return memo[0];
     }
