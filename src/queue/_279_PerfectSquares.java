@@ -1,5 +1,6 @@
 package queue;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -14,10 +15,13 @@ import java.util.LinkedList;
 public class _279_PerfectSquares {
 
     public static void main(String[] args) {
-        //        int n = 12;
-        int n = 13;
-        //        int n = 1;
-        _279Solution1 solution = new _279Solution1();
+        int n = 12; // output: 3
+//        int n = 13; // output: 2
+        //        int n = 1; // output: 1
+
+//        _279Solution1 solution = new _279Solution1();
+        
+        _279Solution2 solution = new _279Solution2();
 
         System.out.println(solution.numSquares(n));
     }
@@ -63,5 +67,26 @@ class _279Solution1 {
         }
 
         return 0;
+    }
+}
+
+/**
+ * 解法二：动态规划
+ */
+class _279Solution2 {
+    
+    public int numSquares(int n) {
+        int[] memo = new int[n + 1];
+        Arrays.fill(memo, Integer.MAX_VALUE);
+        memo[0] = 0;
+        
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j * j <= i; ++j) {
+                // i = （i - j * j） + j * j ，即在 memo[i - j * j] 的基础上加一个数（j * j）得到 i
+                memo[i] = Math.min(memo[i], memo[i - j * j] + 1); 
+            }
+        }
+        
+        return memo[n];
     }
 }
