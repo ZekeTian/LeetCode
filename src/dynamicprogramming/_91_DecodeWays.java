@@ -1,5 +1,7 @@
 package dynamicprogramming;
 
+import java.util.Arrays;
+
 /**
  * https://leetcode.com/problems/decode-ways/
  * 
@@ -48,7 +50,9 @@ public class _91_DecodeWays {
         // test case 3, output: 0
 //        String s = "06";
         
-        _91Solution1 solution = new _91Solution1();
+//        _91Solution1 solution = new _91Solution1();
+
+        _91Solution2 solution = new _91Solution2();
         
         
         System.out.println(solution.numDecodings(s));
@@ -74,11 +78,6 @@ class _91Solution1 {
             return; // 含有前导 0 ，则该次解码失效
         }
         
-        if (index == s.length() - 1) {
-            ++num; // 只剩余一个字符，并且该字符不为 ‘0’，则找到一种有效解码
-            return;
-        }
-        
         getNumDecodings(index + 1); // 一次解码一个字符 
         
         if (index <= s.length() - 2 
@@ -94,3 +93,45 @@ class _91Solution1 {
     }
 }
 
+/**
+ * 解法二：递归 + 记忆化搜索
+ */
+class _91Solution2 {
+    private int[] memo = null; // memo[i] 记录 s[i..len] 字符串的解码次数
+    private String s = null;
+    
+    private int getNumDecodings(int index) {
+        if (index >= s.length()) {
+            return 1; // 已经处理完字符串，则说明找到了一种有效解码
+        }
+        
+        if (-1 != memo[index]) {
+            return memo[index]; // 已经计算出结果，则直接返回
+        }
+        
+        if ('0' == s.charAt(index)) {
+            memo[index] = 0; // 含有前导 0 ，则当前解码无效
+            return 0;
+        }
+        
+        int res = getNumDecodings(index + 1); // 一次只解码一个字符 
+        if (index <= s.length() - 2 
+                && Integer.parseInt(s.substring(index, index + 2)) <= 26) {
+            res += getNumDecodings(index + 2); // 一次解码两个字符
+        }
+        
+        memo[index] = res; // 保存结果
+        
+        return res;
+    }
+    
+    public int numDecodings(String s) {
+        this.s = s;
+        this.memo = new int[s.length()];
+        Arrays.fill(memo, -1);
+        
+        getNumDecodings(0);
+        
+        return memo[0];
+    }
+}
