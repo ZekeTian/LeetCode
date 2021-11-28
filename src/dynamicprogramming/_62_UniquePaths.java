@@ -1,5 +1,7 @@
 package dynamicprogramming;
 
+import java.util.Arrays;
+
 /**
  * https://leetcode.com/problems/unique-paths/
  * 
@@ -24,7 +26,7 @@ public class _62_UniquePaths {
     
     public static void main(String[] args) {
         // test case 1, output: 28
-        int m = 3, n = 7;
+//        int m = 3, n = 7;
         
         // test case 2, output: 3
 //        int m = 3, n = 2;
@@ -33,11 +35,13 @@ public class _62_UniquePaths {
 //        int m = 7, n = 3;
         
         // test case 4, output: 6
-//        int m = 3, n = 3;
+        int m = 3, n = 3;
         
 //        _62Solution1 solution = new _62Solution1();
 
-        _62Solution2 solution = new _62Solution2();
+//        _62Solution2 solution = new _62Solution2();
+
+        _62Solution3 solution = new _62Solution3();
         
         System.out.println(solution.uniquePaths(m, n));
         
@@ -121,3 +125,21 @@ class _62Solution2 {
     }
 }
 
+/**
+ * 解法三：自底向上动态规划
+ */
+class _62Solution3 {
+    public int uniquePaths(int m, int n) {
+        int[][] memo = new int[m][n];
+        Arrays.fill(memo[m - 1], 1); // 最后一行的路径数量全部为 1
+        
+        for (int i = m - 2; i >= 0; --i) {
+            memo[i][n- 1] = memo[i + 1][n - 1]; // 每行最后一列只能向下走
+            for (int j = n - 2; j >= 0; --j) {
+                memo[i][j] = memo[i + 1][j] + memo[i][j + 1];
+            }
+        }
+        
+        return memo[0][0];
+    }
+}
