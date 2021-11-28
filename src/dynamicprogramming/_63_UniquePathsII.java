@@ -32,10 +32,10 @@ public class _63_UniquePathsII {
 
     public static void main(String[] args) {
         // test case 1, output: 2
-//        int[][] obstacleGrid = {{0,0,0},{0,1,0},{0,0,0}};
+        int[][] obstacleGrid = {{0,0,0},{0,1,0},{0,0,0}};
         
         // test case 2, output: 1
-        int[][] obstacleGrid = {{0,1},{0,0}};
+//        int[][] obstacleGrid = {{0,1},{0,0}};
         
         _63Solution1 solution = new _63Solution1();
         
@@ -87,6 +87,57 @@ class _63Solution1 {
     }
 }
 
+/**
+ * 解法二：递归 + 记忆化
+ */
+class _63Solution2 {
+    
+    private int m = 0;
+    private int n = 0;
+    private int[][] memo = null;
+    private int[][] obstacleGrid = null;
+    
+    private int getUniquePathsNum(int x, int y) {
+        if (x == m - 1 && y == n - 1) {
+            memo[x][y] = 1;
+            return 1;
+        }
+        
+        if (1 == obstacleGrid[x][y]) {
+            memo[x][y] = 0;
+            return 0;
+        }
+        
+        if (0 != memo[x][y]) {
+            return memo[x][y];
+        }
+        
+        int res = 0;
+        if (x < m - 1) {
+            res += getUniquePathsNum(x + 1, y);
+        }
+        if (y < n - 1) {
+            res += getUniquePathsNum(x, y + 1);
+        }
 
+        memo[x][y] = res;
+        return res;
+    }
+    
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        this.m = obstacleGrid.length;
+        this.n = obstacleGrid[0].length;
+        this.memo = new int[m][n];
+        this.obstacleGrid = obstacleGrid;
 
+        if (1 == obstacleGrid[m - 1][n - 1]) {
+            return 0;
+        }
+        
+        getUniquePathsNum(0, 0);
+        
+        return memo[0][0];
+    }
+    
+}
 
