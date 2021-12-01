@@ -1,5 +1,6 @@
 package dynamicprogramming;
 
+import java.util.Arrays;
 
 /**
  * https://leetcode.com/problems/coin-change/
@@ -31,16 +32,16 @@ public class _322_CoinChange {
     
     public static void main(String[] args) {
         // test case 1, output: 3
-//        int[] coins = {1, 2, 5};
-//        int amount = 11;
+        int[] coins = {1, 2, 5};
+        int amount = 11;
         
         // test case 2, output: -1
 //        int[] coins = {2};
 //        int amount = 3;
         
         // test case 3, output: 2
-        int[] coins = {1};
-        int amount = 2;
+//        int[] coins = {1};
+//        int amount = 2;
         
         _322Solution1 solution = new _322Solution1();
         
@@ -89,5 +90,50 @@ class _322Solution1 {
         this.coins = coins;
         
         return getCoinChange(amount);
+    }
+}
+
+/**
+ * 解法二：自底向上动态规划
+ */
+class _322Solution2 {
+    
+    public int coinChange(int[] coins, int amount) {
+        if (coins.length < 0 || amount < 0) {
+            return -1;
+        }
+        
+        if (0 == amount) {
+            return 0;
+        }
+        
+        Arrays.sort(coins); // 对 coins 进行升序排序，方便处理
+        if (amount < coins[0]) {
+            return -1; // 最小的零钱都比 amount 大，则无法找零
+        }
+        
+        int[] memo = new int[amount + 1];
+        for (int i = 1; i < coins[0]; ++i) {
+            memo[i] = -1;
+        }
+        memo[coins[0]] = 1;
+        
+        for (int i = coins[0] + 1; i <= amount; ++i) {
+            int min = Integer.MAX_VALUE;
+            for (int c : coins) {
+                if (c > i) { // 因为已经排序，所以后面的零钱均大于 i，无法继续找零
+                    break;
+                }
+                if (-1 != memo[i - c]) { // 可以找零，则取较小值
+                    min = Math.min(min, memo[i - c] + 1);
+                }
+            }
+            if (min == Integer.MAX_VALUE) {
+                min = -1; // 当前 i 对应的金额无法继续找零，所以 min 置为 -1
+            }
+            memo[i] = min;
+        }
+        
+        return memo[amount];
     }
 }
