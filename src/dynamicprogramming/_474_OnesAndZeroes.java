@@ -12,18 +12,20 @@ public class _474_OnesAndZeroes {
 
     public static void main(String[] args) {
         // test case 1, output: 4
-        String[] strs = {"10", "0001", "111001", "1", "0"};
-        int m = 5;
-        int n = 3;
+//        String[] strs = {"10", "0001", "111001", "1", "0"};
+//        int m = 5;
+//        int n = 3;
         
         // test case 2, output: 2
-//        String[] strs = {"10","0","1"};
-//        int m = 1;
-//        int n = 1;
+        String[] strs = {"10","0","1"};
+        int m = 1;
+        int n = 1;
         
 //        _474Solution1 solution = new _474Solution1();
         
-        _474Solution2 solution = new _474Solution2();
+//        _474Solution2 solution = new _474Solution2();
+
+        _474Solution3 solution = new _474Solution3();
         
         System.out.println(solution.findMaxForm(strs, m, n));
     }
@@ -99,7 +101,6 @@ class _474Solution1 {
 
 /**
  * 解法二：递归 + 记忆化
- *
  */
 class _474Solution2 {
     
@@ -161,7 +162,7 @@ class _474Solution2 {
     public int findMaxForm(String[] strs, int m, int n) {
         this.strs = strs;
         this.map = countStrs();
-        this.memo = new int[strs.length][m + 1][n + 1]; // memo[i][j][k] 表示在处理 strs[i] 时，j 个 0、 k 个 1 情况下的结果  
+        this.memo = new int[strs.length][m + 1][n + 1]; // memo[i][j][k] 表示在处理 strs[i...len-1] 时，j 个 0、 k 个 1 情况下的结果  
         
         for (int i = 0; i < strs.length; ++i) {
             for (int j = 0; j <= m; ++j) {
@@ -170,5 +171,75 @@ class _474Solution2 {
         }
         
         return tryFindMaxForm(0, m, n);
+    }
+}
+
+/**
+ * 解法三：自底向上动态规划
+ */
+class _474Solution3 {
+    
+    private class Pair {
+        int one = 0;
+        int zero = 0;
+        
+        Pair(int one, int zero) {
+            this.one = one;
+            this.zero = zero;
+        }
+    }
+    
+    // 统计数组 strs 中各个字符串 0、1 字符的个数
+    private Map<String, Pair> countStrs(String[] strs) {
+        Map<String, Pair> map = new HashMap<>();
+
+        for (String s : strs) {
+            int one = 0;
+            int zero = 0;
+            for (int i = 0; i < s.length(); ++i) {
+                if ('1' == s.charAt(i)) {
+                    ++one;
+                } else {
+                    ++zero;
+                }
+            }
+            
+            map.put(s, new Pair(one, zero));
+        }
+        
+        return map;
+    }
+    
+    public int findMaxForm(String[] strs, int m, int n) {
+        Map<String, Pair> map = countStrs(strs);
+        int[][][] memo = new int[strs.length][m + 1][n + 1]; // memo[i][j][k] 表示在处理 strs[i...len-1] 时，j 个 0、 k 个 1 情况下的结果  
+        
+        // 根据最后一个进行初始化
+        Pair pair = map.get(strs[strs.length - 1]);
+        for (int j = 0; j <= m; ++j) {
+            for (int k = 0; k <= n; ++k) {
+                if (j >= pair.zero && k >= pair.one) {
+                    memo[strs.length - 1][j][k] = 1;
+                } else {
+                    memo[strs.length - 1][j][k] = 0;
+                }
+            }
+        }
+        
+        for (int i = strs.length - 2; i >= 0; --i) {
+            pair = map.get(strs[i]);
+            for (int j = 0; j <= m; ++j) {
+                for (int k = 0; k <= n; ++k) {
+                    int res = memo[i + 1][j][k]; // 不选择 strs[i]
+                    if (j >= pair.zero && k >= pair.one) { // 选择 strs[i]
+                        res = Math.max(res, memo[i + 1][j - pair.zero][k - pair.one] + 1);
+                    }
+                    memo[i][j][k] = res;
+                }
+            }
+        }
+        
+        
+        return memo[0][m][n];
     }
 }
