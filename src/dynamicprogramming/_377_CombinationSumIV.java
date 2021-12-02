@@ -37,13 +37,16 @@ public class _377_CombinationSumIV {
 
     public static void main(String[] args) {
         // test case 1, output: 7
-//        int[] nums = {1, 2, 3};
-//        int target = 4;
+        int[] nums = {1, 2, 3};
+        int target = 4;
         
         // test case 2, output: 0
-        int[] nums = {9};
-        int target = 3;
-        _377Solution1 solution = new _377Solution1();
+//        int[] nums = {9};
+//        int target = 3;
+        
+//        _377Solution1 solution = new _377Solution1();
+
+        _377Solution2 solution = new _377Solution2();
         
         System.out.println(solution.combinationSum4(nums, target));
     }
@@ -96,3 +99,27 @@ class _377Solution1 {
     
 }
 
+/**
+ * 解法二：自底向上动态规划
+ */
+class _377Solution2 {
+    
+    public int combinationSum4(int[] nums, int target) {
+        int[] memo = new int[target + 1]; // memo[i] 表示和为 i 时，可能的组合情况个数
+        memo[0] = 1; // 和为 0 时，可能的组合情况个数为 1（即 nums 中不选择数这种情况）
+        Arrays.sort(nums); // 进行升序排序，方便后面处理
+        
+        for (int i = 1; i <= target; ++i) {
+            int res = 0;
+            for (int j = 0; j < nums.length; ++j) {
+                if (i < nums[j]) { // 因为已经对 nums 进行升序排序，所以一旦找到一个大于 i 的数，则后面全部大于 i，无需继续处理
+                    break;
+                }
+                res += memo[i - nums[j]]; // 把 i 转换成 (i - nums[j]) 
+            }
+            memo[i] = res;
+        }
+        
+        return memo[target];
+    }
+}
