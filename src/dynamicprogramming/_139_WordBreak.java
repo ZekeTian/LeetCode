@@ -35,18 +35,20 @@ public class _139_WordBreak {
 
     public static void main(String[] args) {
         // test case 1, output: true
-//        String s = "leetcode";
-//        List<String> wordDict = Arrays.asList("leet", "code");
+        String s = "leetcode";
+        List<String> wordDict = Arrays.asList("leet", "code");
         
         // test case 2, output: true
 //        String s = "applepenapple";
 //        List<String> wordDict = Arrays.asList("apple", "pen");
         
         // test case 3, output: false
-        String s = "catsandog";
-        List<String> wordDict = Arrays.asList("cats", "dog", "sand", "and", "cat");
+//        String s = "catsandog";
+//        List<String> wordDict = Arrays.asList("cats", "dog", "sand", "and", "cat");
         
-        _139Solution1 solution = new _139Solution1();
+//        _139Solution1 solution = new _139Solution1();
+        
+        _139Solution2 solution = new _139Solution2();
         
         System.out.println(solution.wordBreak(s, wordDict));
     }
@@ -98,3 +100,27 @@ class _139Solution1 {
         return tryWordBreak(s.length());
     }
 }
+
+/**
+ * 解法二：自底向上动态规划
+ */
+class _139Solution2 {
+    
+    public boolean wordBreak(String s, List<String> wordDict) {
+        boolean[] memo = new boolean[s.length() + 1]; // memo[i] 表示 s[0...i-1] 字符串能否被拆分
+        memo[0] = true;
+        
+        for (int i = 1; i <= s.length(); ++i) {
+            // 逐个单词尝试拆分
+            for (String word : wordDict) {
+                if (i >= word.length()
+                        && word.equals(s.substring(i - word.length(), i))) {
+                    memo[i] = memo[i] || memo[i - word.length()];
+                }
+            }
+        }
+        
+        return memo[s.length()];
+    }
+}
+
