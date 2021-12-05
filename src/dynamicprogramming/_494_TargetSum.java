@@ -35,20 +35,22 @@ public class _494_TargetSum {
 
     public static void main(String[] args) {
         // test case 1, output: 5
-        int[] nums = {1,1,1,1,1};
-        int target = 3;
+//        int[] nums = {1,1,1,1,1};
+//        int target = 3;
         
         // test case 2, output: 1
 //        int[] nums = {1};
-//        int target = 1;
+//        int target = 1;j
         
         // test case 3, output: 256
-//        int[] nums = {0, 0, 0, 0, 0, 0, 0, 0, 1};
-//        int target = 1;
+        int[] nums = {0, 0, 0, 0, 0, 0, 0, 0, 1};
+        int target = 1;
         
 //        _494Solution1 solution = new _494Solution1();
 
-        _494Solution2 solution = new _494Solution2();
+//        _494Solution2 solution = new _494Solution2();
+
+        _494Solution3 solution = new _494Solution3();
         
         System.out.println(solution.findTargetSumWays(nums, target));
     }
@@ -64,7 +66,7 @@ class _494Solution1 {
     
     // 返回数组 nums[0...index] 组成和为 target 的组合个数
     private int tryFindTargetSumWays(int index, int target) {
-        if (index < 0) { // index = 0 时结束递归，但是要对 nums[0] = target = 0 这种情况进行特殊处理，因为 +0、-0 在此题中是不同的
+        if (index < 0) { // 也可以在 index = 0 时结束递归，但是要对 nums[0] = target = 0 这种情况进行特殊处理，因为 +0、-0 在此题中是不同的
             return (0 == target ? 1 : 0);
         }
         
@@ -129,5 +131,41 @@ class _494Solution2 {
         }
 
         return memo[nums.length - 1][target + sum];
+    }
+}
+
+/**
+ * 解法三：自底向上动态规划实现方式二
+ *      与解法二不同的地方是：状态的定义、初始状态
+ */
+class _494Solution3 {
+    
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
+        }
+        if (Math.abs(target) > sum) {
+            return 0;
+        }
+        
+        // nums 数组的和为 sum，则 nums 和范围为：[-sum, sum]，即中间结果的范围，为了便于用下标处理，同时加 sum 使得范围变成 [0, 2 * sum]
+        int[][] memo = new int[nums.length + 1][2 * sum + 1]; // memo[i][j] 表示 nums[0...i-1] 数组组合成和为 j 的组合个数
+        memo[0][sum] = 1; // 当数据处理完毕时，target 要为 0 ，这时即可得到一种组合方式，即此时的 memo[0][0 + sum] = 1
+        
+        for (int i = 1; i <= nums.length; ++i) {
+            for (int j = 0; j <= 2 * sum; ++j) {
+                int res = 0;
+                if (j - nums[i - 1] >= 0) {
+                    res += memo[i - 1][j - nums[i - 1]];
+                }
+                if (j + nums[i - 1] <= 2 * sum) {
+                    res += memo[i - 1][j + nums[i - 1]];
+                }
+                memo[i][j] = res;
+            }
+        }
+        
+        return memo[nums.length][target + sum];
     }
 }
