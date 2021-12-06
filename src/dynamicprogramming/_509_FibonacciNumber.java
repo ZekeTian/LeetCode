@@ -1,5 +1,7 @@
 package dynamicprogramming;
 
+import java.util.Arrays;
+
 /**
  * https://leetcode.com/problems/fibonacci-number/
  * 
@@ -30,15 +32,17 @@ public class _509_FibonacciNumber {
 
     public static void main(String[] args) {
         // test case 1, output: 1
-//        int n = 2;
+        int n = 2;
         
         // test case 2, output: 2
 //        int n = 3;
         
         // test case 3, output: 3
-        int n = 4;
+//        int n = 4;
         
-        _509Solution1 solution = new _509Solution1();
+//        _509Solution1 solution = new _509Solution1();
+        
+        _509Solution2 solution = new _509Solution2();
         
         System.out.println(solution.fib(n));
     }
@@ -66,3 +70,33 @@ class _509Solution1 {
     }
 }
 
+/**
+ * 解法二：递归 + 记忆化
+ */
+class _509Solution2 {
+    
+    private int[] memo = null;
+    
+    private int getFib(int n) {
+        if (0 == n || 1 == n) {
+            memo[n] = n;
+            return n;
+        }
+        
+        if (-1 != memo[n]) {
+            return memo[n];
+        }
+        
+        memo[n] = getFib(n - 1) + getFib(n - 2);
+        return memo[n];
+    }
+   
+    public int fib(int n) {
+        if (n < 0) {
+            return 0;
+        }
+        this.memo = new int[n + 1];
+        Arrays.fill(memo, -1);
+        return getFib(n);
+    }
+}
