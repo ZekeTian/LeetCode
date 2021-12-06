@@ -32,17 +32,19 @@ public class _509_FibonacciNumber {
 
     public static void main(String[] args) {
         // test case 1, output: 1
-        int n = 2;
+//        int n = 2;
         
         // test case 2, output: 2
 //        int n = 3;
         
         // test case 3, output: 3
-//        int n = 4;
+        int n = 4;
         
 //        _509Solution1 solution = new _509Solution1();
         
-        _509Solution2 solution = new _509Solution2();
+//        _509Solution2 solution = new _509Solution2();
+        
+        _509Solution3 solution = new _509Solution3();
         
         System.out.println(solution.fib(n));
     }
@@ -100,3 +102,29 @@ class _509Solution2 {
         return getFib(n);
     }
 }
+
+/**
+ * 解法三：自底向上动态规划
+ */
+class _509Solution3 {
+    
+    public int fib(int n) {
+        if (n < 0) {
+            return 0;
+        }
+        if (0 == n || 1 == n) {
+            return n;
+        }
+        int[] memo = new int[n + 1];
+        memo[0] = 0;
+        memo[1] = 1;
+        
+        for (int i = 2; i <= n; ++i) {
+            memo[i] = memo[i - 1] + memo[i - 2];
+        }
+        
+        return memo[n];
+    }
+}
+
+
