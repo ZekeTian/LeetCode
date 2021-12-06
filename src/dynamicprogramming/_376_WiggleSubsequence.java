@@ -35,7 +35,9 @@ public class _376_WiggleSubsequence {
         // test case 2, output: 7
         int[] nums = {1, 17, 5, 10, 13, 15, 10, 5, 16, 8};
         
-        _376Solution1 solution = new _376Solution1();
+//        _376Solution1 solution = new _376Solution1();
+        
+        _376Solution2 solution = new _376Solution2();
         
         
         System.out.println(solution.wiggleMaxLength(nums));
@@ -66,5 +68,30 @@ class _376Solution1 {
         }
         
         return Math.max(up[nums.length - 1], down[nums.length - 1]);
+    }
+}
+
+/**
+ * 解法二：贪心算法
+ */
+class _376Solution2 {
+    
+    public int wiggleMaxLength(int[] nums) {
+        if (nums.length < 2) {
+            return nums.length;
+        }
+        
+        int preDiff = nums[1] - nums[0];
+        int res = (preDiff == 0 ? 1 : 2); // 如果前两个数是相等的，则只算一个
+        
+        for (int i = 2; i < nums.length; ++i) {
+            int curDiff = nums[i] - nums[i - 1];
+            if ((curDiff > 0 && preDiff <= 0) || (curDiff < 0 && preDiff >= 0)) { // 峰型，满足摆动要求
+                preDiff = curDiff;
+                ++res;
+            }
+        }
+        
+        return res;
     }
 }
