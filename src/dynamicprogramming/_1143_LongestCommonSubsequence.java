@@ -1,7 +1,5 @@
 package dynamicprogramming;
 
-import java.util.Arrays;
-
 /**
  * https://leetcode.com/problems/longest-common-subsequence/
  * 
@@ -34,15 +32,17 @@ public class _1143_LongestCommonSubsequence {
 
     public static void main(String[] args) {
         // test case 1, output: 3
-//        String text1 = "abcde", text2 = "ace";
+        String text1 = "abcde", text2 = "ace";
         
         // test case 2, output: 3
 //        String text1 = "abc", text2 = "abc";
         
         // test case 3, output: 0
-        String text1 = "abc", text2 = "def";
+//        String text1 = "abc", text2 = "def";
         
-        _1143Solution1 solution = new _1143Solution1();
+//        _1143Solution1 solution = new _1143Solution1();
+
+        _1143Solution2 solution = new _1143Solution2();
         
         System.out.println(solution.longestCommonSubsequence(text1, text2));
     }
@@ -53,7 +53,7 @@ public class _1143_LongestCommonSubsequence {
  */
 class _1143Solution1 {
     public int longestCommonSubsequence(String text1, String text2) {
-        // memo[i][j] 表示字符串 text1[0...i]、text2[0...j] 的最长公共子序列长度
+        // memo[i][j] 表示字符串 text1[0...i]、text2[0...j] 的最长公共子序列长度（包含 i、j）
         int[][] memo = new int[text1.length()][text2.length()];
         memo[0][0] = (text1.charAt(0) == text2.charAt(0) ? 1 : 0);
         for (int i = 1; i < text2.length(); ++i) {
@@ -75,5 +75,28 @@ class _1143Solution1 {
         }
         
         return memo[text1.length() - 1][text2.length() - 1];
+    }
+}
+
+
+/**
+ * 解法二：自底向上动态规划 实现方式二（不包含右边界）
+ */
+class _1143Solution2 {
+    public int longestCommonSubsequence(String text1, String text2) {
+        // memo[i][j] 表示 text1[0...i-1]、text2[0...j-1] 两个字符串的最长公共子序列的长度
+        int[][] memo = new int[text1.length() + 1][text2.length() + 1];
+        
+        for (int i = 1; i <= text1.length(); ++i) {
+            for (int j = 1; j <= text2.length(); ++j) {
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    memo[i][j] = memo[i - 1][j - 1] + 1;
+                } else {
+                    memo[i][j] = Math.max(memo[i - 1][j], memo[i][j - 1]);
+                }
+            }
+        }
+        
+        return memo[text1.length()][text2.length()];
     }
 }
