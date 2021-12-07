@@ -1,5 +1,7 @@
 package dynamicprogramming;
 
+import java.util.Arrays;
+
 /**
  * https://leetcode.com/problems/unique-binary-search-trees/
  * 
@@ -25,13 +27,15 @@ public class _96_UniqueBinarySearchTrees {
 
     public static void main(String[] args) {
         // test case 1, output: 5
-//        int n = 3;
+        int n = 3;
         
         // test case 2, output: 1
-        int n = 1;
+//        int n = 1;
         
         
-        _96Solution1 solution = new _96Solution1();
+//        _96Solution1 solution = new _96Solution1();
+
+        _96Solution2 solution = new _96Solution2();
         
         System.out.println(solution.numTrees(n));
     }
@@ -63,3 +67,39 @@ class _96Solution1 {
     }
 }
 
+/**
+ * 解法二：递归 + 记忆化
+ */
+class _96Solution2 {
+    
+    private int[] memo = null;
+    
+    private int getNumTrees(int n) {
+        if (0 == n || 1 == n) {
+            memo[n] = 1;
+            return 1;
+        }
+        
+        if (-1 != memo[n]) {
+            return memo[n];
+        }
+        
+        int res = 0;
+        for (int i = 1; i <= n; ++i) {
+            res = res + getNumTrees(i - 1) * getNumTrees(n - i);
+        }
+        memo[n] = res;
+        
+        return res;
+    }
+    
+    public int numTrees(int n) {
+        if (n < 0) {
+            return 0;
+        }
+        this.memo = new int[n + 1]; // memo[i] 存储 i 个节点所能组成的二叉树的数量
+        Arrays.fill(memo, -1);
+        
+        return getNumTrees(n);
+    }
+}
