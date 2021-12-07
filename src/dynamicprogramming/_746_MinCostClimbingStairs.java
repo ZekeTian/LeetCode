@@ -29,14 +29,16 @@ public class _746_MinCostClimbingStairs {
     
     public static void main(String[] args) {
         // test case 1, output: 15
-        int[] cost = {10, 15, 20};
+//        int[] cost = {10, 15, 20};
         
         // test case 2, output: 6
-//        int[] cost = {1, 100, 1, 1, 1, 100, 1, 1, 100, 1};
+        int[] cost = {1, 100, 1, 1, 1, 100, 1, 1, 100, 1};
         
 //        _746Solution1 solution = new _746Solution1();
 
-        _746Solution2 solution = new _746Solution2();
+//        _746Solution2 solution = new _746Solution2();
+
+        _746Solution3 solution = new _746Solution3();
         
         
         System.out.println(solution.minCostClimbingStairs(cost));
@@ -101,3 +103,26 @@ class _746Solution2 {
     }
 }
 
+/**
+ * 解法三：自底向上动态规划
+ */
+class _746Solution3 {
+    public int minCostClimbingStairs(int[] cost) {
+        if (null == cost || cost.length == 0) {
+            return 0;
+        }
+        if (1 == cost.length) {
+            return cost[0];
+        }
+        
+        int[] memo = new int[cost.length + 1];
+        memo[cost.length] = 0;
+        memo[cost.length - 1] = cost[cost.length - 1];
+        
+        for (int i = cost.length - 2; i >= 0; --i) {
+            memo[i] = Math.min(memo[i + 2], memo[i + 1]) + cost[i]; 
+        }
+        
+        return Math.min(memo[0], memo[1]);
+    }
+}
