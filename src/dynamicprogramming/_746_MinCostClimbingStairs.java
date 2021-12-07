@@ -1,5 +1,7 @@
 package dynamicprogramming;
 
+import java.util.Arrays;
+
 /**
  * https://leetcode.com/problems/min-cost-climbing-stairs/
  * 
@@ -27,12 +29,15 @@ public class _746_MinCostClimbingStairs {
     
     public static void main(String[] args) {
         // test case 1, output: 15
-//        int[] cost = {10, 15, 20};
+        int[] cost = {10, 15, 20};
         
         // test case 2, output: 6
-        int[] cost = {1, 100, 1, 1, 1, 100, 1, 1, 100, 1};
+//        int[] cost = {1, 100, 1, 1, 1, 100, 1, 1, 100, 1};
         
-        _746Solution1 solution = new _746Solution1();
+//        _746Solution1 solution = new _746Solution1();
+
+        _746Solution2 solution = new _746Solution2();
+        
         
         System.out.println(solution.minCostClimbingStairs(cost));
     }
@@ -63,3 +68,36 @@ class _746Solution1 {
         return Math.min(getMinCost(0), getMinCost(1));
     }
 }
+
+/**
+ * 解法二：递归 + 记忆化
+ */
+class _746Solution2 {
+    private int[] memo = null;
+    private int[] cost = null;
+    
+    private int getMinCost(int index) {
+        if (index >= cost.length) {
+            return 0;
+        }
+        
+        if (-1 != memo[index]) {
+            return memo[index];
+        }
+        
+        int res = getMinCost(index + 1) + cost[index];
+        res = Math.min(res, getMinCost(index + 2) + cost[index]);
+        memo[index] = res;
+        
+        return res;
+    }
+    
+    public int minCostClimbingStairs(int[] cost) {
+        this.cost = cost;
+        this.memo = new int[cost.length];
+        Arrays.fill(memo, -1);
+        
+        return Math.min(getMinCost(0), getMinCost(1));
+    }
+}
+
