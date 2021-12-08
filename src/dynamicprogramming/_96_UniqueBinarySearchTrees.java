@@ -35,7 +35,9 @@ public class _96_UniqueBinarySearchTrees {
         
 //        _96Solution1 solution = new _96Solution1();
 
-        _96Solution2 solution = new _96Solution2();
+//        _96Solution2 solution = new _96Solution2();
+        
+        _96Solution3 solution = new _96Solution3();
         
         System.out.println(solution.numTrees(n));
     }
@@ -101,5 +103,27 @@ class _96Solution2 {
         Arrays.fill(memo, -1);
         
         return getNumTrees(n);
+    }
+}
+
+/**
+ * 解法三：自底向上动态规划
+ */
+class _96Solution3 {
+    
+    public int numTrees(int n) {
+        int[] memo = new int[n + 1];
+        memo[0] = memo[1] = 1;
+        
+        for (int i = 2; i <= n; ++i) {
+            // 计算长度为 i 的结果
+            int res = 0;
+            for (int j = 1; j <= i; ++j ) {
+                res = res + memo[j - 1] * memo[i - j]; // 以 j 为根顶点，然后 [1...j-1] 作为左子树、[j+1...i] 作为右子树
+            }
+            memo[i] = res;
+        }
+        
+        return memo[n];
     }
 }
