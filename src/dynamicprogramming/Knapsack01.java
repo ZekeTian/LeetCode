@@ -109,7 +109,7 @@ class KnapsackSolution2 {
 
     private int n = 0; // 物品个数
     private int[][] vw = null; // 物品的体积和重量，vw[i][0]，vw[i][1] 分别描述 i 号物品的 vi，wi
-    private int[][] memo = null; // memo[i][j] 表示在放置第 i 号物品、背包体积为 j 时，背包能够装的最大的重量
+    private int[][] memo = null; // memo[i][j] 表示在放置前 i+1 件物品，并且背包体积为 j 的限制条件下时，背包能够装的最大的重量
 
     private int put(int V, int start) {
         if (start == n || V <= 0) {
@@ -169,7 +169,7 @@ class KnapsackSolution3 {
      * @return int整型
      */
     public int knapsack(int V, int n, int[][] vw) {
-        int[][] memo = new int[n][V + 1]; // memo[i][j] 表示在放置第 i 号物品、背包体积为 j 时，背包能够装的最大的重量（此时，已经放置了 i + 1 个物品）
+        int[][] memo = new int[n][V + 1]; // memo[i][j] 表示在放置前 i+1 件物品，并且背包体积为 j 的限制条件下时，背包能够装的最大的重量（此时，已经放置了 i + 1 个物品）
         for (int i = 0; i < n; ++i) {
             Arrays.fill(memo[i], 0);
         }
@@ -210,7 +210,7 @@ class KnapsackSolution4 {
      * @return int整型
      */
     public int knapsack(int V, int n, int[][] vw) {
-        int[][] memo = new int[2][V + 1]; // memo[i][j] 表示在放置第 i 号物品、背包体积为 j 时，背包能够装的最大的重量（此时，已经放置了 i + 1 个物品）
+        int[][] memo = new int[2][V + 1]; // memo[i][j] 表示在放置前 i+1 件物品，并且背包体积为 j 的限制条件下时，背包能够装的最大的重量（此时，已经放置了 i + 1 个物品）
         for (int i = 0; i < 2; ++i) {
             Arrays.fill(memo[i], 0);
         }
@@ -253,7 +253,7 @@ class KnapsackSolution5 {
      * @return int整型
      */
     public int knapsack(int V, int n, int[][] vw) {
-        int[] memo = new int[V + 1]; // memo[j] 表示在放置第 i 号物品、背包体积为 j 时，背包能够装的最大的重量（此时，已经放置了 i + 1 个物品）
+        int[] memo = new int[V + 1]; // memo[j] 表示在放置前 i 件物品、背包体积为 j 时，背包能够装的最大的重量（此时，已经放置了 i + 1 个物品）
         // 初始化第 0 行
         for (int i = 0; i <= V; ++i) {
             memo[i] = (i >= vw[0][0] ? vw[0][0] : 0);
