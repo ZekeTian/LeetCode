@@ -95,6 +95,8 @@ public class _518_CoinChange2 {
  *   a = 2: memo[2] + memo[0] = 1 + 1 = 2，即组合形式为：2、1 + 1
  *   a = 3: memo[3] + memo[1] = 1 + 1 = 2，即组合形式为：2 + 1、1 + 1 + 1
  * c = 5: 内层循环无计算过程
+ * 
+ * 此题中的解与顺序无关，选择：物品在外，背包在内。而第 377 题 CombinationSumIV 与顺序有关，应选择：背包在外，物品在内。
  */
 class _518Solution {
     public int change(int amount, int[] coins) {
