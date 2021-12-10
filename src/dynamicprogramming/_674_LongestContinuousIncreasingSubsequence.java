@@ -53,8 +53,8 @@ class _674Solution {
         
         for (int i = 1; i < nums.length; ++i) {
             if (nums[i] > nums[i - 1]) {
-                memo[i] = memo[i - 1] + 1;
-            }
+                memo[i] = memo[i - 1] + 1; // 满足连续且递增，则在原来的基础上加 1。否则，只是满足连续，但是不满足递增，则结果设置成 1（即 memo[i] = 1），从头开始计算。
+            } // 此处的 else 不写，是因为 memo[i] 默认即为 1，所以无需再在 else 中将 memo[i] 设置成 1
         }
         
         int max = 0;
