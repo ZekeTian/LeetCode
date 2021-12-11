@@ -30,7 +30,9 @@ public class _647_PalindromicSubstrings {
         // test case 2, output: 6
         String s = "aaa";
         
-        _647Solution1 solution = new _647Solution1();
+//        _647Solution1 solution = new _647Solution1();
+        
+        _647Solution2 solution = new _647Solution2();
         
         System.out.println(solution.countSubstrings(s));
     }
@@ -61,3 +63,37 @@ class _647Solution1 {
         return num;
     }
 }
+
+/**
+ * 解法二：动态规划，具体思路如下：
+ *      求解 s[i...j] 是否为回文时，先看两端是否相等，如果相等则查看 s[i+1...j-1] 是否为回文。如果 s[i+1...j-1] 是回文，则 s[i...j] 也为回文。
+ *      但是需要对两种特殊情况进行处理，即
+ *          （1）s[i...j] 长度等于 1，如:a
+ *          （2）s[i...j] 长度等于 2，如：aa
+ *      对于上述这两种情况，无需去看 s[i+1...j-1] 是否为回文（实际上，此时左右边界已经处于非法状态，也不能查看）
+ *      综上，如果 s[i] = s[j]，则需要判断以下两种情况是否有一种情况成立
+ *          （1）s[i...j] 长度 <= 2，即特殊情况
+ *          （2）s[i+1...j-1] 是回文，即一般情况
+ *      注意：以上两种情况只需要有一种情况成立即可，所以用或逻辑
+ */
+class _647Solution2 {
+    
+    public int countSubstrings(String s) {
+        int num = 0;
+        boolean[][] memo = new boolean[s.length()][s.length()]; // memo[i][j] 表示 s[i...j] 字符串是否为回文
+        
+        // 外层循环先处理 j （左边界），是为了先计算出边界小的结果，从而方便后面计算边界大的结果
+        for (int j = 0; j < s.length(); ++j) {
+            for (int i = 0; i <= j; ++i) {
+                if (s.charAt(j) == s.charAt(i) 
+                        && (j - i <= 1 || memo[i + 1][j - 1])) { // j-i <= 1 是指 s[i...j] 长度 <= 2，即 j - i + 1 <= 2
+                    memo[i][j] = true;
+                    ++num;
+                }
+            }
+        }
+        
+        return num;
+    }
+}
+
