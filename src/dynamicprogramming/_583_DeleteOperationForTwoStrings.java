@@ -60,10 +60,13 @@ class _583Solution {
         for (int i = 1; i <= word1.length(); ++i) {
             for (int j = 1; j <= word2.length(); ++j) {
                 if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
-                    memo[i][j] = Math.min(
-                            memo[i - 1][j - 1], /* 匹配，不删除，只缩减字符串长度 */
-                            Math.min(memo[i - 1][j] + 1, memo[i][j - 1] + 1) /* 不匹配，删除 word1[i - 1] 或 word2[j - 1] */
-                            ); 
+//                    memo[i][j] = Math.min(
+//                            memo[i - 1][j - 1], /* 匹配，不删除，只缩减字符串长度 */
+//                            Math.min(memo[i - 1][j] + 1, memo[i][j - 1] + 1) /* 不匹配，删除 word1[i - 1] 或 word2[j - 1] */
+//                            ); 
+                    // 此时可以选择删除，也可以选择不删除，但是因为是要求最小操作次数，所以此时直接匹配，可以减少操作次数。
+                    // 不选择删除，直接匹配的写法如下所示；完整的写法，如上所示（两种写法的结果均正确）。
+                    memo[i][j] = memo[i - 1][j - 1];
                 } else {
                     memo[i][j] = Math.min(
                             memo[i - 1][j - 1] + 2, /* 匹配不上，删除 word1[i - 1]、word2[j - 1] */
