@@ -1,6 +1,7 @@
 package backtrack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,12 +37,14 @@ public class _47_PermutationsII {
 
     public static void main(String[] args) {
         // test case1
-//        int[] nums = {1, 1, 2};
+        int[] nums = {1, 1, 2};
         
         // test case2
-        int[] nums = {1, 2, 3};
+//        int[] nums = {1, 2, 3};
         
-        _47Solution1 solution = new _47Solution1();
+//        _47Solution1 solution = new _47Solution1();
+
+        _47Solution2 solution = new _47Solution2();
         
         
         System.out.println(solution.permuteUnique(nums));
@@ -97,7 +100,7 @@ class _47Solution1 {
 
 
 /**
- * 实现方式一：使用剪枝策略去重
+ * 实现方式二：使用剪枝策略去重
  *       2
  *      / \
  *     1   1
@@ -106,10 +109,40 @@ class _47Solution1 {
  */
 class _47Solution2 {
     
-    List<List<Integer>> resultList = null;
+    private List<List<Integer>> resultList = null;
+    private boolean[] flags = null;
+    private int[] nums = null;
+    
+    private void getPermuteUnique(List<Integer> list) {
+        if (list.size() == nums.length) {
+            resultList.add(new ArrayList<>(list));
+            return;
+        }
+        
+        for (int i = 0; i < nums.length; ++i) {
+            if (i > 0 && nums[i - 1] == nums[i] && !flags[i - 1]) {
+                // 因为从 nums[0] 开始遍历使用，所以 nums[i-1] 之前一定使用过。
+                // 但是当 nums[i-1] 与 nums[i] 相等并且 nums[i-1] 未使用时，nums[i-1] 会继续被使用，此时会产生重复（相当于 nums[i] 和 nums[i-1] 相互换了位置，但是结果依然不变）
+                continue;
+            }
+            
+            if (!flags[i]) {
+                flags[i] = true;
+                list.add(nums[i]);
+                getPermuteUnique(list);
+                list.remove(list.size() - 1);
+                flags[i] = false;
+            }
+        }
+    }
     
     public List<List<Integer>> permuteUnique(int[] nums) {
-        resultList = new ArrayList<>();
+        Arrays.sort(nums);
+        this.resultList = new ArrayList<>();
+        this.nums = nums;
+        this.flags = new boolean[nums.length];
+        
+        getPermuteUnique(new ArrayList<>());
         
         return resultList;
     }
