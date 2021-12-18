@@ -32,12 +32,14 @@ public class _401_BinaryWatch {
 
     public static void main(String[] args) {
         // test case1
-//        int turnedOn = 2;
+        int turnedOn = 2;
         
         // test case2
-        int turnedOn = 9;
+//        int turnedOn = 9;
         
-        _401Solution1 solution = new _401Solution1();
+//        _401Solution1 solution = new _401Solution1();
+
+        _401Solution2 solution = new _401Solution2();
         
         
         System.out.println(solution.readBinaryWatch(turnedOn));
@@ -113,3 +115,22 @@ class _401Solution1 {
     }
 }
 
+/**
+ * 解法二：暴力法。遍历所有可能的时间，然后保存符合当前条件的时间。
+ */
+class _401Solution2 {
+    
+    public List<String> readBinaryWatch(int turnedOn) {
+        ArrayList<String> resultList = new ArrayList<String>();
+        
+        for (int h = 0; h < 12; ++h) {
+            for (int m = 0; m < 60; ++m) {
+                if (Integer.bitCount(h) + Integer.bitCount(m) == turnedOn) { // 统计出小时和分钟的二进制表示形式中 1 的数量，如果符合条件，则保存
+                    resultList.add(String.format("%d:%02d", h, m));
+                }
+            }
+        }
+        
+        return resultList;
+    }
+}
