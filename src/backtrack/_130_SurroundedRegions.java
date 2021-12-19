@@ -104,8 +104,8 @@ class _130Solution {
         }
         
         // 遍历所有，将未标记的 O 标记成 X，而将标记的区域恢复成 O
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < m; ++j) {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if ('+' == board[i][j]) {
                     board[i][j] = 'O';
                 } else if ('O' == board[i][j]) {
