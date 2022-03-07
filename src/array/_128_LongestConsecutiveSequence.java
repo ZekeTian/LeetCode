@@ -127,3 +127,37 @@ class _128Solution2 {
     }
 }
 
+/**
+ * 解法三：使用 Set（实现方式二，只从连续子串中的第一个元素进入内循环）
+ *       与解法二不同的是，解法三只会从连续子串中的第一个元素进入内循环，这样可以避免重复访问元素，而且也不需要再使用集合记录。
+ */
+class _128Solution3 {
+    
+    public int longestConsecutive(int[] nums) {
+        if (null == nums || nums.length == 0) {
+            return 0;
+        }
+        
+        Set<Integer> set = new HashSet<>();
+        for (int i : nums) {
+            set.add(i);
+        }
+        
+        int maxLen = 0;
+        for (int i : nums) {
+            if (!set.contains(i - 1)) { // 如果 i 是连续子串中的第一个元素，那么 i - 1 一定不在 set 中
+                // 从连续子串中的第一个元素，向后扩展
+                int n = i + 1;
+                int len = 1;
+                while (set.contains(n)) {
+                    ++len;
+                    ++n;
+                }
+                
+                maxLen = Math.max(maxLen, len);
+            }
+        }
+        
+        return maxLen;
+    }
+}
