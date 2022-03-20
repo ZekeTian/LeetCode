@@ -30,7 +30,11 @@ public class _498_DiagonalTraverse {
                         { 7, 8, 9 } };
         
         
-        _498Solution1 solution = new _498Solution1();
+//        _498Solution1 solution = new _498Solution1();
+        
+        _498Solution2 solution = new _498Solution2();
+        
+
         int[] res = solution.findDiagonalOrder(mat);
         
         System.out.println(Arrays.toString(res));
@@ -57,9 +61,9 @@ class _498Solution1 {
         this.n = mat[0].length;
         int[] res = new int[m * n];
         int idx = 0;
-        int count = m + n - 2; // 对角线之和的最大值
+        int sum = m + n - 2; // 对角线之和的最大值
         
-        for (int i = 0; i <= count; ++i) {
+        for (int i = 0; i <= sum; ++i) {
             if (i % 2 == 0) { // 斜向上方向行走
                 for (int y = 0; y < n; ++y) {
                     if (inArea(i - y, y)) {
@@ -78,4 +82,41 @@ class _498Solution1 {
         return res;
     }
     
+}
+
+/**
+ * 解法二：对解法一进行优化，减少内层循环的次数
+ */
+class _498Solution2 {
+    
+    public int[] findDiagonalOrder(int[][] mat) {
+        if (mat == null || mat[0].length == 0) {
+            return new int[] {};
+        }
+        
+        int m = mat.length, n = mat[0].length;
+        int[] res = new int[m * n];
+        int idx = 0;
+        int sum = m + n - 2;
+        
+        for (int i = 0; i <= sum; ++i) {
+            if (i % 2 == 0) {
+                // 当 i 值较小时：y 从 0 开始，到 i 时结束。
+                // 当 i 值较大时：y 从 i - m + 1 开始，到 n - 1 时结束
+                // 所以，y 的初始值是 Math.max(0, i - m + 1)；结束值是 Math.min(i, n - 1)
+                for (int y = Math.max(0, i - m + 1); y <= Math.min(i, n - 1); ++y) {
+                    res[idx++] = mat[i - y][y];
+                }
+            } else {
+                // 当 i 值较小时：x 从 0 开始，到 i 时结束
+                // 当 i 值较大时：x 从 i - n + 1 开始，到 m - 1 时结束
+                // 所以，x 的初始值是 Math.max(0, i - n + 1)；结束值是 Math.min(i, m - 1)
+                for (int x = Math.max(0, i - n + 1); x <= Math.min(i, m - 1); ++x) {
+                    res[idx++] = mat[x][i - x];
+                }
+            }
+        }
+        
+        return res;
+    }
 }
