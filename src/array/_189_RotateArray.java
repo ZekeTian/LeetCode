@@ -33,16 +33,18 @@ public class _189_RotateArray {
 
     public static void main(String[] args) {
         // test case1, output: [5,6,7,1,2,3,4]
-        int[] nums = { 1, 2, 3, 4, 5, 6, 7 };
-        int k = 3;
+//        int[] nums = { 1, 2, 3, 4, 5, 6, 7 };
+//        int k = 3;
 
         // test case1, output: [3,99,-1,-100]
-//        int[] nums = { -1, -100, 3, 99 };
-//        int k = 2;
+        int[] nums = { -1, -100, 3, 99 };
+        int k = 2;
 
 //        _189Solution1 solution = new _189Solution1();
         
-        _189Solution2 solution = new _189Solution2();
+//        _189Solution2 solution = new _189Solution2();
+        
+        _189Solution3 solution = new _189Solution3();
         
         solution.rotate(nums, k);
 
@@ -103,4 +105,44 @@ class _189Solution2 {
         }
     }
     
+}
+
+/**
+ * 解法三：使用三次反转
+ *        如：nums = [1,2,3,4,5,6,7], k = 3，得到 [5,6,7,1,2,3,4]。
+ *        可以将 nums = [1,2,3,4,5,6,7] 分成 [1,2,3,4], [5,6,7] 两部分。
+ *        先统一对 nums 进行反转，得到 [7,6,5,4,3,2,1]。其中，[1,2,3,4] 变成 [4,3,2,1]，[5,6,7] 变成 [7,6,5]。
+ *        然后再对 [7,6,5] 这一部分进行反转，得到 [5,6,7,4,3,2,1]。
+ *        最后对 [4,3,2,1] 这一部分进行反转，得到 [5,6,7,1,2,3,4]，即为最终结果。
+ *        
+ *        图示过程：
+ *                          ------>-->  得到  -->------>
+ *        整体反转           <--<------
+ *        前面一部分反转      --><------
+ *        后面一部分反转      -->------>
+ */
+class _189Solution3 {
+    
+    // 对 nums[left...right] 部分进行反转
+    private void reverse(int[] nums, int left, int right) {
+        int l = left, r = right;
+        while (l < r) {
+            int tmp = nums[l];
+            nums[l] = nums[r];
+            nums[r] = tmp;
+            ++l;
+            --r;
+        }
+    }
+    
+    // ------>-->  得到  -->------>
+    public void rotate(int[] nums, int k) {
+        k = k % nums.length;
+        // 整体反转，从 ------>--> 得到 <--<------
+        reverse(nums, 0, nums.length - 1);
+        // 反转前面一部分，从 <--<------ 得到 --><------
+        reverse(nums, 0, k - 1);
+        // 反转后面一部分，从 --><------ 得到 -->------>
+        reverse(nums, k, nums.length - 1);
+    }
 }
