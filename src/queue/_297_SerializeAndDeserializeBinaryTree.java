@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.StringJoiner;
 
 import datastructure.TreeNode;
-import datastructure.TreeUtil;
 
 /**
  * https://leetcode.com/problems/serialize-and-deserialize-binary-tree/
@@ -44,10 +43,15 @@ import datastructure.TreeUtil;
 public class _297_SerializeAndDeserializeBinaryTree {
 
     public static void main(String[] args) {
+        // test case1, output: [1,2,3,null,null,4]
 //        String data = "[1,2,3,null,null,4]";
+        
+        // test case2, output: [1,2,3,2]
         String data = "[1,2,3,2]";
         
-        _297Solution1 solution = new _297Solution1();
+//        _297Solution1 solution = new _297Solution1();
+        
+        _297Solution2 solution = new _297Solution2();
         
         TreeNode root = solution.deserialize(data);
         
@@ -155,4 +159,99 @@ class _297Solution1 {
     }
     
 }
+
+/**
+ * 实现方式二，serialize 的实现方式是
+ *  遍历当层序结果（此时的层序结果中包含 null 节点），将节点逐个加入到 joiner 中，但是对最后一层进行特殊处理，从而去掉多余的 null
+ */
+class _297Solution2 {
+    
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (null == root) {
+            return "[]";
+        }
+        
+        // BFS 遍历，获得二叉树对应的层序遍历结果
+        List<List<TreeNode>> list = new ArrayList<>();
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        int lastNotNullIdx = 0; // 最后一个非空节点在层序中的下标
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int num = queue.size(); // 当前层节点的数量
+            List<TreeNode> currentLevel = new ArrayList<>();
+            for (int i = 0; i < num; ++i) {
+                TreeNode poll = queue.poll();
+                currentLevel.add(poll);
+                if (null != poll) {
+                    queue.addLast(poll.left);
+                    queue.addLast(poll.right);
+                    lastNotNullIdx = i;
+                }
+            }
+            list.add(currentLevel);
+        }
+        
+        // 遍历当前层，然后向 joiner 中添加下一层的节点
+        StringJoiner joiner = new StringJoiner(","); // 保存每层节点（包括中间的 null 节点）
+        for (int i = 0; i < list.size() - 2; ++i) {
+            List<TreeNode> currentLevel = list.get(i);
+            for (TreeNode node : currentLevel) {
+                // 遍历当前层的节点，然后将其添加到 joiner 中
+                joiner.add((node == null ? "null" : node.val + ""));
+            }
+        }
+        
+        // 遍历最后一层的节点（只遍历前面的一部分，后面全部为 null 的部分不遍历）
+        List<TreeNode> lastlevel = list.get(list.size() - 2);
+        for (int i = 0; i <= lastNotNullIdx; ++i) {
+            TreeNode node = lastlevel.get(i);
+            joiner.add((node == null ? "null" : node.val + ""));
+        }
+        
+        return "[" + joiner.toString() + "]";
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (null == data || data.length() == 0 || "[]".equals(data)) {
+            return null;
+        }
+        
+        String[] nodes = data.substring(1, data.length() - 1) // 去掉前后的 "[]"
+                             .split(","); // 按照 ',' 分割，得到每个节点的值
+        
+        // 将根顶点添加到 list 中
+        TreeNode root = new TreeNode(Integer.parseInt(nodes[0]));
+        List<List<TreeNode>> list = new ArrayList<>();
+        list.add(new ArrayList<>());
+        list.get(0).add(root);
+        
+        // 遍历 nodes ，逐个创建对应的 TreeNode
+        int idx = 1; // nodes 中的下标
+        while (idx < nodes.length) {
+            // 在创建 TreeNode 时，遍历上一层，然后创建当前层的 TreeNode
+            List<TreeNode> preLevel = list.get(list.size() - 1);
+            List<TreeNode> currentLevel = new ArrayList<>();
+            for (TreeNode node : preLevel) {
+                if (idx < nodes.length && !"null".equals(nodes[idx])) { // 左子节点
+                    node.left = new TreeNode(Integer.parseInt(nodes[idx]));
+                    currentLevel.add(node.left);
+                }
+                ++idx; // 已经处理 nodes 中的一个节点，则继续向后处理
+                
+                if (idx < nodes.length && !"null".equals(nodes[idx])) { // 右子节点
+                    node.right = new TreeNode(Integer.parseInt(nodes[idx]));
+                    currentLevel.add(node.right);
+                }
+                ++idx;
+            }
+            list.add(currentLevel);
+        }
+        
+        return root;
+    }
+    
+}
+
 
