@@ -1,6 +1,7 @@
 package graph;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -35,15 +36,17 @@ public class _207_CourseSchedule {
 
     public static void main(String[] args) {
         // test case1, output: true
-        int numCourses = 2;
-        int[][] prerequisites = { { 1, 0 } };
+//        int numCourses = 2;
+//        int[][] prerequisites = { { 1, 0 } };
         
         // test case2, output: false
-//        int numCourses = 2;
-//        int[][] prerequisites = { { 1, 0 }, { 0, 1 } };
+        int numCourses = 2;
+        int[][] prerequisites = { { 1, 0 }, { 0, 1 } };
         
         
-        _207Solution solution = new _207Solution();
+//        _207Solution1 solution = new _207Solution1();
+        
+        _207Solution2 solution = new _207Solution2();
         
         System.out.println(solution.canFinish(numCourses, prerequisites));
     }
@@ -75,7 +78,7 @@ public class _207_CourseSchedule {
  *              在遍历 v5 的正向邻居点时，会回到顶点 v2，而此时 v2 的状态是 “访问中”，即再次遍历到状态为 “访问中” 的顶点，
  *              所以说明图中存在环。
  */
-class _207Solution {
+class _207Solution1 {
     
     // 正向邻接表（ u -> v），u 的邻接表
     private List<List<Integer>> adjList = null;
@@ -132,4 +135,59 @@ class _207Solution {
 }
 
 
+/**
+ * 解法二；利用队列和入度表实现（类似于广度遍历）
+ *       首先构建图的正向邻接表和入度表
+ *       根据入度表，将入度为 0 的顶点加入到队列中
+ *       如果队列不为空，则不断从队列中取出顶点进行处理，直到队列为空
+ *          从队列中取出顶点 v 后，顶点 v 相当于是访问。因为队列中的顶点都是入度为 0 的顶点，即顶点 v 所表示的课程没有前置课程，
+ *       因此可以学习此课程（即访问 v）。
+ *          访问完顶点 v 后，可以将 v 从图中移除，因此与顶点 v 关联的正向邻居点，它们的入度可以减 1（即相当于依赖课程 v 的其它课程，
+ *       它们的前置课程数量减 1）。
+ *          如果某个邻居点的入度减 1 之后，其入度等于 0，则说明该邻居点也可以被访问，所以将该邻居点添加到队列中（即相当于该邻居点对应课程
+ *       的前置课程已经全部被学习完，所以可以学习该课程）。
+ *       当处理完队列中的元素之后，判断处理的顶点数量是否等于图中的总顶点数量，如果相等则说明无环（即相当于判断已学习的课程数量是否等于
+ *       课程的总数量，如果相等，则说明能够学习完所有课程）。
+ */
+class _207Solution2 {
+    
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        int[] inDegree = new int[numCourses]; // 每个顶点的入度（相当于每个课程剩余的前置课程数量）
+        
+        // 构建图的邻接表和入度表
+        for (int i = 0; i < numCourses; ++i) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] e : prerequisites) {
+            adjList.get(e[1]).add(e[0]);
+            ++inDegree[e[0]];
+        }
+        
+        LinkedList<Integer> queue = new LinkedList<>(); // 存储入度为 0 的顶点（即相当于存储无前置课程的课程号）
+        for (int i = 0; i < numCourses; ++i) {
+            if (inDegree[i] == 0) {
+                queue.addLast(i);
+            }
+        }
 
+        // 遍历队列中的元素（相当于学习无前置课程的课程）
+        int visited = 0; // 已经访问过的顶点数量，相当于是已经学习过的课程数量
+        while (!queue.isEmpty()) {
+            Integer v = queue.poll(); // 入度为 0 的顶点，即无前置课程的课程
+            ++visited;
+            // 将 v 从图中移除，则与顶点 v 关联的正向邻居点，它们的入度可以减 1。即相当于依赖课程 v 的其它课程，它们的前置课程数量减 1。
+            List<Integer> adjs = adjList.get(v);
+            for (int adjV : adjs) {
+                --inDegree[adjV];
+                if (inDegree[adjV] == 0) {
+                    // 如果某个邻居点的入度减 1 之后，其入度等于 0，则说明该邻居点也可以被访问，所以将该邻居点添加到队列中。
+                    // 即相当于依赖课程 v 的其它课程，它们的前置课程数量减 1。
+                    queue.addLast(adjV);
+                }
+            }
+        }
+        
+        return visited == numCourses;
+    }
+}
