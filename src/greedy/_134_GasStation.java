@@ -52,7 +52,9 @@ public class _134_GasStation {
         
 //        _134Solution1 solution = new _134Solution1();
         
-        _134Solution2 solution = new _134Solution2();
+//        _134Solution2 solution = new _134Solution2();
+        
+        _134Solution3 solution = new _134Solution3();
         
         
         System.out.println(solution.canCompleteCircuit(gas, cost));
@@ -132,3 +134,31 @@ class _134Solution2 {
     
 }
 
+
+/**
+ * 解法三：贪心算法
+ *        该思路的核心步骤需要用到解法一里面的证明，即如果加油站 i 无法到达加油站 j，则 [i+1, j-1] 之间的加油站都无法到达加油站 j，
+ *        因此需要在 j 后面的加油站中选择起始点。但是，在该解法中不会像解法一一样真正地去模拟。
+ */
+class _134Solution3 {
+    
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int start = 0; // 选择出发的加油站
+        int currentRemainGas = 0; // 从 start 号加油站出发，油箱剩余的油量
+        int totalRemainGas = 0; // 跑完所有加油站后，油箱剩余的油量（用于判断是否存在解）
+        
+        for (int i = 0; i < gas.length; ++i) {
+            currentRemainGas = currentRemainGas + gas[i] - cost[i];
+            totalRemainGas = totalRemainGas + gas[i] - cost[i];
+            if (currentRemainGas < 0) {
+                // 从 start 号加油站出发，此时剩余的油量小于 0，则说明无法从 start 号到达 i 号加油站，
+                // 因此需要选择 i 号后面的加油站作为起始点
+                start = i + 1;
+                currentRemainGas = 0;
+            }
+        }
+        
+        return (totalRemainGas < 0 ? -1 : start);
+    }
+    
+}
