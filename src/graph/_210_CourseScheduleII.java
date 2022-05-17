@@ -2,6 +2,7 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -46,16 +47,22 @@ public class _210_CourseScheduleII {
 //        int numCourses = 2;
 //        int[][] prerequisites = { { 1, 0 } };
         
-        // test case2, output: [0, 2, 1, 3]
+        // test case2, output: [0, 2, 1, 3] 或 [0,1,2,3]
 //        int numCourses = 4;
 //        int[][] prerequisites = { { 1, 0 }, { 2, 0 }, { 3, 1 }, { 3, 2 } };
         
         // test case3, output: [0]
-      int numCourses = 1;
-      int[][] prerequisites = { };
+//        int numCourses = 1;
+//        int[][] prerequisites = { };
+      
+        // test case4, output: []
+        int numCourses = 3;
+        int[][] prerequisites = { { 1, 0 }, { 1, 2 }, { 0, 1 } };
       
         
-        _210Solution1 solution = new _210Solution1();
+//        _210Solution1 solution = new _210Solution1();
+        
+        _210Solution2 solution = new _210Solution2();
         
         
         System.out.println(Arrays.toString(solution.findOrder(numCourses, prerequisites)));
@@ -132,3 +139,52 @@ class _210Solution1 {
     }
     
 }
+
+/**
+ * 解法二：广度优先遍历，思路和第 207 题一样。 
+ */
+class _210Solution2 {
+    
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] order = new int[numCourses]; // 最终确定的课程顺序
+        int idx = 0; // order 的下标（相当于是已经确定顺序的课程数量）
+        List<List<Integer>> list = new ArrayList<>(); // 邻接表
+        int[] inDegree = new int[numCourses]; // inDegree[v] 记录顶点 v 的入度
+        
+        // 创建邻接表
+        for (int i = 0; i < numCourses; ++i) {
+            list.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) { // edge: edge[1] -> edge[0] 
+            list.get(edge[1]).add(edge[0]);
+            ++inDegree[edge[0]];
+        }
+        
+        // 将入度为 0 的顶点添加到队列 queue 中
+        LinkedList<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < inDegree.length; ++i) {
+            if (inDegree[i] == 0) {
+                queue.addLast(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            Integer v = queue.poll();
+            
+            // 将顶点 v 从图中删除，则其邻居点的度数需要减 1
+            List<Integer> adjList = list.get(v);
+            for (int adjV : adjList) {
+                --inDegree[adjV]; // v 被删除后，邻居点 adjV 的度数需要减 1
+                if (inDegree[adjV] == 0) {
+                    queue.addLast(adjV); // adjV 的入度为 0，则相当于是课程 adjV 的前置课程全部学完，因此可以学习课程 adjV
+                }
+            }
+            
+            order[idx++] = v; // v 已经处理完毕，则将 v 添加到 order 中，相当于是已经确定 v 的顺序
+        }
+        
+        return (idx == numCourses ? order : new int[] {}); // idx != numCourses 时，说明存在环，则直接返回空数组
+    }
+    
+}
+
+
