@@ -33,7 +33,9 @@ public class _264_UglyNumberII {
         int n = 1;
         
         
-        _264Solution1 solution = new _264Solution1();
+//        _264Solution1 solution = new _264Solution1();
+        
+        _264Solution2 solution = new _264Solution2();
         
         
         System.out.println(solution.nthUglyNumber(n));
@@ -73,4 +75,55 @@ class _264Solution1 {
 }
 
 
+/**
+ * 解法二：动态规划（三指针）
+ *        创建一个 memo 数组，其中 memo[i] 表示第 i 个丑数。 
+ *        memo 数组中，每个数字都可以乘以 2、3、5。为了区分哪些数字已经乘以了 2、3、5，哪些数字没有乘以 2、3、5，
+ *        我们使用三个指针 p2, p3, p5 分别表示。
+ *          memo[1 ... p2-1] 表示已经乘以了 2
+ *          memo[1 ... p3-1] 表示已经乘以了 3
+ *          memo[1 ... p5-1] 表示已经乘以了 5
+ *        每次生成一个新的丑数时，都用 memo[p2] * 2，memo[p3] * 3，memo[p5] * 5，然后取三个数字中的最小值作为新的丑数。
+ *        之后，再根据新的丑数更新 p2、p3、p5 的位置。
+ *        
+ *        实际上，该过程也相当于把 memo 数组复制成三个，然后 p2、p3、p5 各自负责遍历一个数组，然后再将三个数组中当前值的最小值
+ *        添加到 memo 中。整体的过程类似于归并排序。
+ */
+class _264Solution2 {
+    
+    public int nthUglyNumber(int n) {
+        int[] memo = new int[n + 1]; // memo[i] 表示第 i 个丑数
+        memo[1] = 1;
+        
+        int p2 = 1; // memo[1 ... p2-1] 表示已经乘以了 2
+        int p3 = 1; // memo[1 ... p3-1] 表示已经乘以了 3
+        int p5 = 1; // memo[1 ... p5-1] 表示已经乘以了 5
+        
+        // 逐个生成丑数
+        for (int i = 2; i <= n; ++i) {
+            // p2、p3、p5 对应的数字分别乘以 2、3、5，得到新的数字
+            int num2 = memo[p2] * 2;
+            int num3 = memo[p3] * 3;
+            int num5 = memo[p5] * 5;
+            
+            // 从新数字 num2、num3、num5 中选择最小的数字作为第 i 个丑数
+            int num = Math.min(num2, Math.min(num3, num5));
+            memo[i] = num;
+            
+            // 更新 p2、p3、p5 的位置
+            if (num == num2) {
+                ++p2; // 由 memo[p2] 可以得到 num，则需要更新 p2
+            }
+            if (num == num3) {
+                ++p3;
+            }
+            if (num == num5) {
+                ++p5;
+            }
+        }
+        
+        return memo[n];
+    }
+    
+}
 
