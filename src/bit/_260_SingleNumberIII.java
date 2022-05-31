@@ -1,5 +1,6 @@
 package bit;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +37,21 @@ public class _260_SingleNumberIII {
 
     public static void main(String[] args) {
         // test case1, output: [3, 5]
-        int[] nums = { 1, 2, 1, 3, 2, 5 };
+//        int[] nums = { 1, 2, 1, 3, 2, 5 };
+        
+        // test case2, output: [-1, 0]
+//        int[] nums = { -1, 0 };
+        
+        // test case3, output: [0, 1]
+        int[] nums = { 1, 0 };
+        
+        
+//        _260Solution1 solution = new _260Solution1();
+        
+        _260Solution2 solution = new _260Solution2();
+        
+        
+        System.out.println(Arrays.toString(solution.singleNumber(nums)));
     }
     
 }
@@ -59,6 +74,33 @@ class _260Solution1 {
         for (int k : keys) {
             if (countMap.get(k) == 1) {
                 res[i++] = k;
+            }
+        }
+        
+        return res;
+    }
+    
+}
+
+
+class _260Solution2 {
+    
+    public int[] singleNumber(int[] nums) {
+        int xor = 0; // 异或和
+        for (int i : nums) {
+            xor ^= i;
+        }
+        
+        // 得到两个数的分界位置，即两个数最开始不同的位置
+        int mask = xor & (-xor);
+        
+        // 对两个数进行分类，一个数和 mask 异或为 0，另一个数和 mask 异或不为 0 
+        int[] res = new int[2];
+        for (int i : nums) {
+            if ((i & mask) == 0) {
+                res[0] ^= i;
+            } else {
+                res[1] ^= i;
             }
         }
         
