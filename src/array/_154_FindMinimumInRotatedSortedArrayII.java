@@ -32,13 +32,15 @@ public class _154_FindMinimumInRotatedSortedArrayII {
 
     public static void main(String[] args) {
         // test case1, output: 1
-        int[] nums = { 1, 3, 5 };
+//        int[] nums = { 1, 3, 5 };
         
         // test case2, output: 0
-//        int[] nums = { 2, 2, 2, 0, 1 };
+        int[] nums = { 2, 2, 2, 0, 1 };
         
         
-        _154Solution1 solution = new _154Solution1();
+//        _154Solution1 solution = new _154Solution1();
+        
+        _154Solution2 solution = new _154Solution2();
         
         
         System.out.println(solution.findMin(nums));
@@ -64,4 +66,32 @@ class _154Solution1 {
         return min;
     }
     
+}
+
+/**
+ * 解法二：二分搜索
+ */
+class _154Solution2 {
+    
+    public int findMin(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] < nums[right]) {
+                right = mid; // 因为 nums[mid] 可能就是最小值，所以不能是 right = mid - 1
+            } else if (nums[mid] > nums[right]) {
+                left = mid + 1;
+            } else { // nums[mid] == nums[right]，则将 right 左移（因为 nums[right] 和 nums[left] 相等，所以 right 左移也不会丢失 nums[right] 这个值）
+                --right;
+            }
+        }
+        
+        return nums[right];
+    }
+
 }
