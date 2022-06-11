@@ -85,8 +85,8 @@ public class _528_RandomPickWithWeight {
  */
 class _528Solution1 {
     
-    private int[] prefixSum = null;
-    private int total = 0;
+    private int[] prefixSum = null; // 前缀和
+    private int total = 0; // 权重的总和
     private Random random = null;
     
     public _528Solution1(int[] w) {
@@ -116,5 +116,47 @@ class _528Solution1 {
 }
 
 
-
+/**
+ * 解法二：前缀和 + 二分搜索
+ *       在解法一中，遍历 prefixSum 寻找 randomWeight <= prefixSum[i] 的过程实际上可以进一步优化。
+ *       因为 1 <= w[i] <= 10^5，所以 prefixSum 是升序，故可以对prefixSum 执行二分搜索，而该过程实际上
+ *       相当于是 lowerBound ，即寻找第一个大于等于 randomWeight 的权重。
+ */
+class _528Solution2 {
+    
+    private int[] prefixSum = null; // 前缀和
+    private int total = 0; // 权重总和
+    private Random random = null;
+    
+    public _528Solution2(int[] w) {
+        this.prefixSum = new int[w.length + 1];
+        this.random = new Random();
+        
+        for (int i = 1; i <= w.length; ++i) {
+            this.prefixSum[i] = this.prefixSum[i - 1] + w[i - 1];
+            this.total += w[i - 1];
+        }
+    }
+    
+    public int pickIndex() {
+        // 随机生成一个 [1, total] 之间的权重 
+        int randomWeight = random.nextInt(total) + 1;
+        
+        // 在 prefixSum 中寻找第一个大于等于 randomWeight 的权重 
+        int left = 0, right = prefixSum.length - 1;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (randomWeight <= prefixSum[mid]) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        
+        return (left < prefixSum.length ? left - 1 : 0); // 因为 left 是 prefixSum 中的下标，所以转换成 w 的下标时，还需要 -1
+    }
+    
+}
 
