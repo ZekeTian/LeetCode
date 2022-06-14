@@ -38,7 +38,9 @@ package queue;
 public class _622_DesignCircularQueue {
 
     public static void main(String[] args) {
-        MyCircularQueue1 circularQueue = new MyCircularQueue1(3); // 设置长度为 3
+//        MyCircularQueue1 circularQueue = new MyCircularQueue1(3); // 设置长度为 3
+        
+        MyCircularQueue2 circularQueue = new MyCircularQueue2(3); // 设置长度为 3
         
         System.out.println(circularQueue.enQueue(1)); // true
         System.out.println(circularQueue.enQueue(2)); // true
@@ -120,6 +122,94 @@ class MyCircularQueue1 {
     
     public boolean isFull() {
         return capacity == size;
+    }
+    
+}
+
+/**
+ * 实现方式二：利用循环链表实现
+ */
+class MyCircularQueue2 {
+
+    private class ListNode {
+        ListNode next;
+        int val;
+        
+        ListNode(ListNode next, int val) {
+            this.next = next;
+            this.val = val;
+        }
+        
+        ListNode(int val) {
+            this(null, val);
+        }
+    }
+    
+    private ListNode dummyHead = null; // 虚拟头节点
+    private int capacity = 0; // 队列的容量
+    private int size = 0; // 队列中实际的元素个数
+    private ListNode tail = null; // 队尾节点
+    
+    public MyCircularQueue2(int k) {
+        this.capacity = k;
+        this.dummyHead = new ListNode(0);
+        this.tail = dummyHead;
+    }
+    
+    // 队尾处添加元素
+    public boolean enQueue(int value) {
+        if (isFull()) {
+            return false;
+        }
+        
+        ++size;
+        tail.next = new ListNode(value); // 将新元素添加到队尾后面
+        tail = tail.next; // 队尾指针向后移动
+        tail.next = dummyHead.next; // 队尾指向队头
+        
+        return true;
+    }
+    
+    // 队头处移除元素
+    public boolean deQueue() {
+        if (isEmpty()) {
+            return false;
+        }
+        
+        --size;
+        if (isEmpty()) { // 移除队头元素后，队列为空
+            dummyHead.next = null;
+            tail = dummyHead;
+        } else { // 移除队头元素后，队列不为空
+            dummyHead.next = dummyHead.next.next; // 删除队头
+            tail.next = dummyHead.next; // 队尾指向新的队头
+        }
+        
+        return true;
+    }
+    
+    public int Front() {
+        if (isEmpty()) {
+            return -1;
+        }
+        
+        return dummyHead.next.val;
+    }
+    
+    public int Rear() {
+        if (isEmpty()) {
+            return -1;
+        }
+        
+        return tail.val;
+    }
+    
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    public boolean isFull() {
+        return size == capacity;
     }
     
 }
