@@ -1,5 +1,7 @@
 package string;
 
+import java.util.Arrays;
+
 /**
  * https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/
  * 
@@ -35,7 +37,11 @@ public class _395_LongestSubstringWithAtLeastKRepeatingCharacters {
         int k = 2;
         
         
-        _395Solution1 solution = new _395Solution1();
+//        _395Solution1 solution = new _395Solution1();
+        
+        _395Solution2 solution = new _395Solution2();
+        
+        
         System.out.println(solution.longestSubstring(s, k));
     }
     
@@ -103,6 +109,59 @@ class _395Solution1 {
     
     public int longestSubstring(String s, int k) {
         return longestSubstring(s, 0, s.length() - 1, k);
+    }
+    
+}
+
+/**
+ * 解法二：滑动窗口（本题不能直接使用常规的滑动窗口思路，需要加上特定限制条件才行）
+ *       因为字符串中只含有小写字母，所以最多只有 26 类字符，所以可以限制字符串中最多只含有 1、2...25、26 类字符，
+ *       然后再使用滑动窗口的思路解决。
+ */
+class _395Solution2 {
+    
+    public int longestSubstring(String s, int k) {
+        int len = 0; // 满足条件的最长子串的长度
+
+        int[] count = new int[26]; // 字符串中各个字符出现的次数 
+        // 限制子串中只含有 n 个字符
+        for (int n = 1; n <= 26; ++n) {
+            Arrays.fill(count, 0);
+            
+            // 当子串最多只含有 n 类字符时，遍历字符串 s，确定满足条件的子串长度
+            // i、j 分别表示窗口左右的边界，s[i...j] 表示窗口限制得到的子串
+            // total 表示 s[i...j] 中含有的字符类别数量，sum 表示 s[i...j] 中满足个数要求的字符类别数量
+            for (int i = 0, j = 0, total = 0, sum = 0; j < s.length(); ++j) {
+                char ch = s.charAt(j);
+                ++count[ch - 'a'];
+                if (count[ch - 'a'] == 1) {
+                    ++total; // 遇到一个新类别的字符，则 total 自增
+                }
+                if (count[ch - 'a'] == k) {
+                    ++sum; // 字符 ch 符合个数要求，所以 sum 自增
+                }
+                
+                // 因为限制了 s[i...j] 中字符类别的数量，所以当 total > n 时，需要减小窗口的大小，减少子串中字符的类别数量
+                while (total > n) {
+                    ch = s.charAt(i); // 在窗口向右移之前，记录左边界 i 原来的字符
+                    ++i; // i 右移
+                    --count[ch - 'a']; // 相应的字符数量减少
+                    
+                    if (count[ch - 'a'] == 0) {
+                        --total; // 子串中少一类字符
+                    }
+                    if (count[ch - 'a'] == k - 1) {
+                        --sum; // 子串中一类字符不符合个数要求
+                    }
+                }
+                
+                if (total == sum) { // s[i...j] 中所有的字符都符合要求，即 s[i...j] 是一个满足条件的子串
+                    len = Math.max(len, j - i + 1); 
+                }
+            }
+        }
+        
+        return len;
     }
     
 }
