@@ -26,15 +26,16 @@ public class _405_ConvertANumberToHexadecimal {
 
     public static void main(String[] args) {
         // test case1, output: "1a"
-        int num = 26;
+//        int num = 26;
         
         // test case2, output: "ffffffff"
-//        int num = -1;
+        int num = -1;
         
 //        _405Solution1 solution = new _405Solution1();
         
-        _405Solution2 solution = new _405Solution2();
+//        _405Solution2 solution = new _405Solution2();
         
+        _405Solution3 solution = new _405Solution3();
         
         
         System.out.println(solution.toHex(num));
@@ -86,3 +87,33 @@ class _405Solution2 {
     }
     
 }
+
+/**
+ * 解法三：核心思想和解法二一样，将 num 中四个二进制位作为一组，然后形成一个十六进制数。
+ *       只不过在具体实现时，解法三是使用位运算实现。
+ */
+class _405Solution3 {
+    
+    public String toHex(int num) {
+        if (num == 0) {
+            return "0";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        while (num != 0) {
+            int a = (num & 15); // 取出 num 中最右边的 4 位二进制。因为只取 4 位，所以和 1111（即十进制的 15）进行 “&” 操作即可。
+            if (a <= 9) {
+                builder.append(a);
+            } else {
+                builder.append((char) ('a' + a - 10));
+            }
+            
+            num >>>= 4; // 向右移 4 位，即丢弃已经计算的 4 位
+        }
+        
+        return builder.reverse().toString();
+    }
+    
+}
+
+
