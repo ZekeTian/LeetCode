@@ -46,7 +46,10 @@ public class _410_SplitArrayLargestSum {
         int[] nums = { 1, 4, 4 };
         int m = 3;
         
-        _410Solution1 solution = new _410Solution1();
+//        _410Solution1 solution = new _410Solution1();
+        
+        _410Solution2 solution = new _410Solution2();
+        
         
         System.out.println(solution.splitArray(nums, m));
         
@@ -112,6 +115,63 @@ class _410Solution1 {
         }
         
         return memo[len - 1][m];
+    }
+    
+}
+
+
+/**
+ * 解法二：二分搜索
+ * 
+ * 思路：
+ *  （1）遍历 nums，确定 nums 子数组和的最小值（即二分的左边界 left）、最大值（即二分的右边界 right）
+ *  （2）在 left、right 之间，利用二分法寻找一个值，使得 nums 中的子数组符合要求
+ */
+class _410Solution2 {
+    
+    public int splitArray(int[] nums, int m) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        
+        int left = 0; // nums 中子数组和的最小值，即二分搜索中的左边界值。
+        int right = 0; // nums 中子数组和的最大值，即二分搜索中的右边界值
+        
+        // 遍历 nums，确定 left、right 
+        for (int i : nums) {
+            left = Math.max(left, i);
+            right += i;
+        }
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            int s = splits(nums, mid); // 按照 mid 去分割 nums，获得子数组的数量
+            
+            if (s > m) {
+                left = mid + 1; // 增大 mid，使得后续子数组更长，从而减少子数组的数量
+            } else {
+                right = mid;
+            }
+        }
+        
+        return left;
+    }
+    
+    // 将 nums 分割成多个连续的子数组，每个子数组的和小于等于 target，最后返回子数组个数
+    private int splits(int[] nums, int target) {
+        int curSum = 0; // 当前子数组的和
+        int num = 1; // 分割的子数组的数量
+        
+        for (int i : nums) {
+            if (curSum + i > target) { // 当前数字 i 不能放进之前的子数组中，需要放进单独的一个子数组中
+                curSum = 0; // 子数组的和置为 0
+                ++num; // 子数组数量增加
+            }
+            
+            curSum += i;
+        }
+        
+        return num;
     }
     
 }
